@@ -1,40 +1,87 @@
 Intake
 ======
 
-Intake is a Java library for processing user commands.
+Intake is a Java library for parsing user commands.
 
-* Register commands using annotations on methods in a class.
-* Or use a one-command-per-class scheme.
+Commands can be registered via two ways:
 
-This library is used in [WorldEdit](https://github.com/sk89q/worldedit),
-[WorldGuard](https://github.com/sk89q/worldguard), and other projects;
-however, the original command code used in WorldEdit 5.x and earlier
-is not included in this project. Instead, this project contains
-the command code used in WorldEdit 6.x and beyond, which bears strong
-resemblance to the old code but a significant amount has been
-rewritten.
+* Methods can be annotated with `@Command`.
+* A class can implement `CommandCallable`.
+
+Several commands can be registered on an implementation of `Dispatcher`, which
+can parse input and execute the correct command.
+
+Sub-commands are supported. This is because all `Dispatcher`s are also
+`CommandCallable`s, so you can add a dispatcher to another dispatcher to another
+dispatcher!
+
+In addition, Intake supports completion of arguments, although currently the
+annotation method of command registration does not support the completion of
+parameters in a command. You can complete sub-commands, however.
+
+The API supports a rich amount of metadata about each command, allowing the
+inspection of registered commands, their parameters, their permissions, and
+their usage instructions.
+
+History
+-------
+
+This library is taken from [WorldEdit](https://github.com/sk89q/worldedit) 6.x.
+You may be familiar with the older command framework in WorldEdit — while this
+library is based off of that framework, it has been taken from a newer version of
+WorldEdit, which at the time of writing, has not been released.
+
+Usage
+-----
+
+Please be aware that the library is currently a work in progress. While it was
+merged into WorldEdit's `main` branch, it was done after more than a year
+since it was originally written. There may be some small bugs here and
+and there is currently a dire lack of unit tests.
+
+There is currently some legacy code as well, which tends to be stable but very
+poorly documetned.
 
 It is strongly recommended that if you use this library in a plugin or mod
 for Minecraft, the library should be shaded and the `com.sk89q.intake` package
-relocated to something internal to your project (`myproject.internal.intake`).
+relocated to something internal to your project (i.e. `myproject.internal.intake`).
 
-Documentation is currently short as the project is a work-in-progress until
-WorldEdit 6 is released. There may be various minor bugs and a lack of
-unit tests until then.
+Intake currently requires some version of Google Guava that is equal to or
+newer than 10.0.1. Guava is not bundled with the library.
 
-**Note:** The API is subject to change in future versions and it currently
-contains a lot of legacy code.
+Currently, Intake is available in sk89q's Maven repository:
 
-Dependencies
-------------
+```xml
+<repositories>
+  <repository>
+    <id>maven.sk89q.com</id>
+    <url>http://maven.sk89q.com/repo/</url>
+  </repository>
+</repositories>
+```
 
-Intake currently requires some version of Guava that is equal to or newer than
-10.0.1.
+As a dependency,
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>com.sk89q</groupId>
+    <artifactId>intake</artifactId>
+    <version>{version here}</version>
+  </dependency>
+</dependencies>
+```
+
+No release of Intake has been made. Only snapshot builds are available.
+
+**Note:** The API is subject to change in snapshot builds.
 
 Backwards Compatibility
 -----------------------
 
-There have been some changes to the library since the original version.
+An effort was made to make transitioning from the older command framework easier
+with fairly minimal changes required to the code. If you are planning to convert
+from the old command framework to this version, be aware of these changes:
 
 * The `CommandPermissions` annotation was renamed to `Require`.
 * The `WrappedCommandException` class was renamed to `InvocationCommandException`.
@@ -47,6 +94,7 @@ There have been some changes to the library since the original version.
   `yourMethod(Player player, CommandContext args)`). There is some
   backwards compatibility if `LegacyCommandsHelper` is registered
   on the instance of `ParametricBuilder`.
+* `Injector` was removed. Pass instances to `ParametricBuilder`.
 
 Examples
 --------
@@ -120,7 +168,7 @@ public class MyBinding extends BindingHelper {
 
 Perhaps catch exceptions thrown by commands:
 
-```
+```java
 public class MyExceptionConverter extends ExceptionConverterHelper {
     @ExceptionMatch
     public void convert(NumberFormatException e) throws CommandException {
@@ -192,3 +240,6 @@ Links
 
 * [Visit our website](http://www.enginehub.org/)
 * [IRC channel](http://skq.me/irc/irc.esper.net/sk89q/) (#sk89q on irc.esper.net)
+
+
+----------
