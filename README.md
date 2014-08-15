@@ -40,7 +40,7 @@ since it was originally written. There may be some small bugs here and
 and there is currently a dire lack of unit tests.
 
 There is currently some legacy code as well, which tends to be stable but very
-poorly documetned.
+poorly documented.
 
 It is strongly recommended that if you use this library in a plugin or mod
 for Minecraft, the library should be shaded and the `com.sk89q.intake` package
