@@ -221,6 +221,14 @@ CommandMapping mapping = dispatcher.get("love");
 String desc = mapping.getDescription().getShortDescription();
 ```
 
+Documentation
+-------------
+
+Documentation is currently a work-in-progress.
+
+Find it here: https://github.com/sk89q/Intake/wiki
+
+
 Compiling
 ---------
 
