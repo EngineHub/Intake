@@ -44,7 +44,8 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void preProcess(Object object, Method method, ParameterData[] parameters, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
+    public boolean preProcess(Object object, Method method, ParameterData[] parameters, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
+        return true;
     }
 
     @Override

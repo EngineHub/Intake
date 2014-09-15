@@ -205,45 +205,50 @@ class ParametricCallable implements CommandCallable {
         ParameterData parameter = null;
 
         try {
+            boolean invoke = true;
+
             // preProcess handlers
             List<InvokeHandler> handlers = new ArrayList<InvokeHandler>();
             for (InvokeListener listener : builder.getInvokeListeners()) {
                 InvokeHandler handler = listener.createInvokeHandler();
                 handlers.add(handler);
-                handler.preProcess(object, method, parameters, context, locals);
-            }
-
-            // Collect parameters
-            for (int i = 0; i < parameters.length; i++) {
-                parameter = parameters[i];
-
-                if (mayConsumeArguments(i, arguments)) {
-                    // Parse the user input into a method argument
-                    ArgumentStack usedArguments = getScopedContext(parameter, arguments);
-
-                    try {
-                        args[i] = parameter.getBinding().bind(parameter, usedArguments, false);
-                    } catch (MissingParameterException e) {
-                        // Not optional? Then we can't execute this command
-                        if (!parameter.isOptional()) {
-                            throw e;
-                        }
-
-                        args[i] = getDefaultValue(i, arguments);
-                    }
-                } else {
-                    args[i] = getDefaultValue(i, arguments);
+                if (!handler.preProcess(object, method, parameters, context, locals)) {
+                    invoke = false;
                 }
             }
 
-            // Check for unused arguments
-            checkUnconsumed(arguments);
+            if (invoke) {
+                // Collect parameters
+                for (int i = 0; i < parameters.length; i++) {
+                    parameter = parameters[i];
 
-            // preInvoke handlers
-            boolean invoke = true;
-            for (InvokeHandler handler : handlers) {
-                if (!handler.preInvoke(object, method, parameters, args, context, locals)) {
-                    invoke = false;
+                    if (mayConsumeArguments(i, arguments)) {
+                        // Parse the user input into a method argument
+                        ArgumentStack usedArguments = getScopedContext(parameter, arguments);
+
+                        try {
+                            args[i] = parameter.getBinding().bind(parameter, usedArguments, false);
+                        } catch (MissingParameterException e) {
+                            // Not optional? Then we can't execute this command
+                            if (!parameter.isOptional()) {
+                                throw e;
+                            }
+
+                            args[i] = getDefaultValue(i, arguments);
+                        }
+                    } else {
+                        args[i] = getDefaultValue(i, arguments);
+                    }
+                }
+
+                // Check for unused arguments
+                checkUnconsumed(arguments);
+
+                // preInvoke handlers
+                for (InvokeHandler handler : handlers) {
+                    if (!handler.preInvoke(object, method, parameters, args, context, locals)) {
+                        invoke = false;
+                    }
                 }
             }
 

@@ -53,7 +53,7 @@ public interface InvokeHandler {
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    void preProcess(Object object, Method method, ParameterData[] parameters,
+    boolean preProcess(Object object, Method method, ParameterData[] parameters,
                     CommandContext context, CommandLocals locals) throws CommandException, ParameterException;
 
     /**
