@@ -129,6 +129,8 @@ public class SimpleDispatcher implements Dispatcher {
             if (mapping != null) {
                 try {
                     mapping.getCallable().call(subArguments, locals, subParents);
+                } catch (AuthorizationException e) {
+                    throw e;
                 } catch (CommandException e) {
                     e.prependStack(subCommand);
                     throw e;
