@@ -48,7 +48,7 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void preInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) throws ParameterException {
+    public boolean preInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) throws ParameterException {
         Command annotation = method.getAnnotation(Command.class);
         
         if (annotation != null) {
@@ -60,6 +60,8 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
                 throw new UnconsumedParameterException(context.getRemainingString(annotation.max()));
             }
         }
+
+        return true;
     }
 
     @Override

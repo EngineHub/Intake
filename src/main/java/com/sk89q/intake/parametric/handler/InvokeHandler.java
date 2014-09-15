@@ -65,10 +65,11 @@ public interface InvokeHandler {
      * @param args the arguments to be given to the method
      * @param context the context
      * @param locals the locals object
+     * @return true to permit invocation of command
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    void preInvoke(Object object, Method method, ParameterData[] parameters,
+    boolean preInvoke(Object object, Method method, ParameterData[] parameters,
                    Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException;
 
     /**

@@ -240,16 +240,21 @@ class ParametricCallable implements CommandCallable {
             checkUnconsumed(arguments);
 
             // preInvoke handlers
+            boolean invoke = true;
             for (InvokeHandler handler : handlers) {
-                handler.preInvoke(object, method, parameters, args, context, locals);
+                if (!handler.preInvoke(object, method, parameters, args, context, locals)) {
+                    invoke = false;
+                }
             }
 
-            // Execute!
-            method.invoke(object, args);
+            if (invoke) {
+                // Execute!
+                method.invoke(object, args);
 
-            // postInvoke handlers
-            for (InvokeHandler handler : handlers) {
-                handler.postInvoke(handler, method, parameters, args, context, locals);
+                // postInvoke handlers
+                for (InvokeHandler handler : handlers) {
+                    handler.postInvoke(handler, method, parameters, args, context, locals);
+                }
             }
         } catch (MissingParameterException e) {
             throw new InvalidUsageException("Too few parameters!", this);
