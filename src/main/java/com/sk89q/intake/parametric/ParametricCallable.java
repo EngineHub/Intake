@@ -210,7 +210,7 @@ class ParametricCallable implements CommandCallable {
             for (InvokeListener listener : builder.getInvokeListeners()) {
                 InvokeHandler handler = listener.createInvokeHandler();
                 handlers.add(handler);
-                handler.preProcess(object, method, parameters, context);
+                handler.preProcess(object, method, parameters, context, locals);
             }
 
             // Collect parameters
@@ -241,7 +241,7 @@ class ParametricCallable implements CommandCallable {
 
             // preInvoke handlers
             for (InvokeHandler handler : handlers) {
-                handler.preInvoke(object, method, parameters, args, context);
+                handler.preInvoke(object, method, parameters, args, context, locals);
             }
 
             // Execute!
@@ -249,7 +249,7 @@ class ParametricCallable implements CommandCallable {
 
             // postInvoke handlers
             for (InvokeHandler handler : handlers) {
-                handler.postInvoke(handler, method, parameters, args, context);
+                handler.postInvoke(handler, method, parameters, args, context, locals);
             }
         } catch (MissingParameterException e) {
             throw new InvalidUsageException("Too few parameters!", this);

@@ -22,6 +22,7 @@ package com.sk89q.intake.parametric.handler;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.SettableDescription;
+import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.MissingParameterException;
 import com.sk89q.intake.parametric.UnconsumedParameterException;
 import com.sk89q.intake.context.CommandContext;
@@ -43,11 +44,11 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void preProcess(Object object, Method method, ParameterData[] parameters, CommandContext context) throws CommandException, ParameterException {
+    public void preProcess(Object object, Method method, ParameterData[] parameters, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
     }
 
     @Override
-    public void preInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context) throws ParameterException {
+    public void preInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) throws ParameterException {
         Command annotation = method.getAnnotation(Command.class);
         
         if (annotation != null) {
@@ -62,7 +63,7 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void postInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context) {
+    public void postInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) {
     }
 
     @Override
