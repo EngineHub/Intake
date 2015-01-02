@@ -28,6 +28,7 @@ import com.sk89q.intake.InvocationCommandException;
 import com.sk89q.intake.Parameter;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.SettableDescription;
+import com.sk89q.intake.completion.CommandCompleter;
 import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.annotation.Optional;
@@ -65,6 +66,7 @@ class ParametricCallable implements CommandCallable {
     private final Set<Character> legacyFlags = new HashSet<Character>();
     private final SettableDescription description = new SettableDescription();
     private final Require permission;
+    private final CommandCompleter commandCompleter;
 
     /**
      * Create a new instance.
@@ -182,6 +184,20 @@ class ParametricCallable implements CommandCallable {
 
         // Get permissions annotation
         permission = method.getAnnotation(Require.class);
+
+        // Set command completer
+        if (definition.completer() == Class.class) {
+            // Set to default
+            commandCompleter = builder.getDefaultCompleter();
+        } else {
+            // Set a custom completer
+            CommandCompleter customCompleter = builder.getCompleters().get(definition.completer());
+            if (customCompleter == null) {
+                throw new ParametricException("Cannot find custom completer for " + definition.completer().getCanonicalName());
+            } else {
+                commandCompleter = customCompleter;
+            }
+        }
     }
 
     @Override
@@ -288,7 +304,7 @@ class ParametricCallable implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(String arguments, CommandLocals locals) throws CommandException {
-        return builder.getDefaultCompleter().getSuggestions(arguments, locals);
+        return commandCompleter.getSuggestions(arguments, locals);
     }
 
     /**

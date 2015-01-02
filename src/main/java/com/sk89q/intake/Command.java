@@ -99,4 +99,11 @@ public @interface Command {
      */
     boolean anyFlags() default false;
 
+    /**
+     * The command completer.
+     *
+     * @return the command completer, or {@link Class} if not set
+     */
+    Class<?> completer() default Class.class;
+
 }
