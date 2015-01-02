@@ -15,9 +15,8 @@ Sub-commands are supported. This is because all `Dispatcher`s are also
 `CommandCallable`s, so you can add a dispatcher to another dispatcher to another
 dispatcher!
 
-In addition, Intake supports completion of arguments, although currently the
-annotation method of command registration does not support the completion of
-parameters in a command. You can complete sub-commands, however.
+In addition, Intake supports completion of arguments through
+`CommandCallable`s and `CommandCompleter`s
 
 The API supports a rich amount of metadata about each command, allowing the
 inspection of registered commands, their parameters, their permissions, and

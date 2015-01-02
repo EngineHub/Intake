@@ -64,6 +64,7 @@ public class ParametricBuilder {
     private final Map<Type, Binding> bindings = new HashMap<Type, Binding>();
     private final List<InvokeListener> invokeListeners = new ArrayList<InvokeListener>();
     private final List<ExceptionConverter> exceptionConverters = new ArrayList<ExceptionConverter>();
+    private final Map<Class, CommandCompleter> completers = new HashMap<Class, CommandCompleter>();
     private Authorizer authorizer = new NullAuthorizer();
     private CommandCompleter defaultCompleter = new NullCompleter();
     
@@ -215,6 +216,15 @@ public class ParametricBuilder {
     }
 
     /**
+     * Get the map of custom completers.
+     *
+     * @return a map of custom completers.
+     */
+    Map<Class, CommandCompleter> getCompleters() {
+        return completers;
+    }
+
+    /**
      * Get the authorizer.
      *
      * @return the authorizer
@@ -252,6 +262,17 @@ public class ParametricBuilder {
     public void setDefaultCompleter(CommandCompleter defaultCompleter) {
         checkNotNull(defaultCompleter);
         this.defaultCompleter = defaultCompleter;
+    }
+
+    /**
+     * Add a custom command suggestions provider that will be used if
+     * specified in a {@link Command}
+     *
+     * @param completer the custom command completer
+     */
+    public void addCompleter(CommandCompleter completer) {
+        checkNotNull(completer);
+        completers.put(completer.getClass(), completer);
     }
 
 }
