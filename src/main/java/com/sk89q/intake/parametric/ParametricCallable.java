@@ -20,14 +20,7 @@
 package com.sk89q.intake.parametric;
 
 import com.google.common.primitives.Chars;
-import com.sk89q.intake.Command;
-import com.sk89q.intake.CommandCallable;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.InvalidUsageException;
-import com.sk89q.intake.InvocationCommandException;
-import com.sk89q.intake.Parameter;
-import com.sk89q.intake.Require;
-import com.sk89q.intake.SettableDescription;
+import com.sk89q.intake.*;
 import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.annotation.Optional;
@@ -44,11 +37,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The implementation of a {@link CommandCallable} for the
@@ -200,7 +191,7 @@ class ParametricCallable implements CommandCallable {
             throw new InvalidUsageException(null, this, true);
         }
 
-        Object[] args = new Object[parameters.length];
+        final Object[] args = new Object[parameters.length];
         ContextArgumentStack arguments = new ContextArgumentStack(context);
         ParameterData parameter = null;
 
@@ -254,7 +245,16 @@ class ParametricCallable implements CommandCallable {
 
             if (invoke) {
                 // Execute!
-                method.invoke(object, args);
+                try {
+                    builder.getCommandExecutor().submit(new Callable<Object>() {
+                        @Override
+                        public Object call() throws Exception {
+                            return method.invoke(object, args);
+                        }
+                    }).get();
+                } catch (ExecutionException e) {
+                    throw e.getCause();
+                }
 
                 // postInvoke handlers
                 for (InvokeHandler handler : handlers) {

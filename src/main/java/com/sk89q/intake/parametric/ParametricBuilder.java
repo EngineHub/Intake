@@ -19,7 +19,9 @@
 
 package com.sk89q.intake.parametric;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableBiMap.Builder;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.CommandException;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -66,6 +69,7 @@ public class ParametricBuilder {
     private final List<ExceptionConverter> exceptionConverters = new ArrayList<ExceptionConverter>();
     private Authorizer authorizer = new NullAuthorizer();
     private CommandCompleter defaultCompleter = new NullCompleter();
+    private ExecutorService commandExecutor = MoreExecutors.sameThreadExecutor();
     
     /**
      * Create a new builder.
@@ -148,6 +152,31 @@ public class ParametricBuilder {
     public void addExceptionConverter(ExceptionConverter converter) {
         checkNotNull(converter);
         exceptionConverters.add(converter);
+    }
+
+    /**
+     * Get the executor service used to invoke the actual command.
+     *
+     * <p>Bindings will still be resolved in the thread in which the
+     * callable was called.</p>
+     *
+     * @return the command executor
+     */
+    public ExecutorService getCommandExecutor() {
+        return commandExecutor;
+    }
+
+    /**
+     * Set the executor service used to invoke the actual command.
+     *
+     * <p>Bindings will still be resolved in the thread in which the
+     * callable was called.</p>
+     *
+     * @return the command executor
+     */
+    public void setCommandExecutor(ExecutorService commandExecutor) {
+        checkNotNull(commandExecutor, "commandExecutor");
+        this.commandExecutor = commandExecutor;
     }
 
     /**
