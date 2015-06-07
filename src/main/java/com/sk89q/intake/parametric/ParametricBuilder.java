@@ -19,7 +19,6 @@
 
 package com.sk89q.intake.parametric;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableBiMap.Builder;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.sk89q.intake.Command;
@@ -29,6 +28,7 @@ import com.sk89q.intake.Require;
 import com.sk89q.intake.completion.CommandCompleter;
 import com.sk89q.intake.completion.NullCompleter;
 import com.sk89q.intake.context.CommandContext;
+import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.parametric.annotation.Switch;
 import com.sk89q.intake.parametric.binding.Binding;
@@ -118,17 +118,17 @@ public class ParametricBuilder {
      * Attach an invocation listener.
      * 
      * <p>Invocation handlers are called in order that their listeners are
-     * registered with a {@link ParametricBuilder}. It is not guaranteed that
+     * registered with a ParametricBuilder. It is not guaranteed that
      * a listener may be called, in the case of a {@link CommandException} being
      * thrown at any time before the appropriate listener or handler is called.
      * It is possible for a 
-     * {@link InvokeHandler#preInvoke(Object, Method, ParameterData[], Object[], CommandContext)} to
+     * {@link InvokeHandler#preInvoke(Object, Method, ParameterData[], Object[], CommandContext, CommandLocals)} to
      * be called for a invocation handler, but not the associated
-     * {@link InvokeHandler#postInvoke(Object, Method, ParameterData[], Object[], CommandContext)}.</p>
+     * {@link InvokeHandler#postInvoke(Object, Method, ParameterData[], Object[], CommandContext, CommandLocals)}.</p>
      * 
      * <p>An example of an invocation listener is one to handle
      * {@link Require}, by first checking to see if permission is available
-     * in a {@link InvokeHandler#preInvoke(Object, Method, ParameterData[], Object[], CommandContext)}
+     * in a {@link InvokeHandler#preInvoke(Object, Method, ParameterData[], Object[], CommandContext, CommandLocals)}
      * call. If permission is not found, then an appropriate {@link CommandException}
      * can be thrown to cease invocation.</p>
      * 
@@ -171,8 +171,6 @@ public class ParametricBuilder {
      *
      * <p>Bindings will still be resolved in the thread in which the
      * callable was called.</p>
-     *
-     * @return the command executor
      */
     public void setCommandExecutor(ExecutorService commandExecutor) {
         checkNotNull(commandExecutor, "commandExecutor");
