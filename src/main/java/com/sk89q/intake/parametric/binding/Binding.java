@@ -56,7 +56,7 @@ public interface Binding {
      * @param parameter information about the parameter
      * @return the behavior
      */
-    BindingBehavior getBehavior(ParameterData parameter);
+    BindingBehavior getBehavior(ParameterData<?> parameter);
     
     /**
      * Get the number of arguments that this binding will consume, if this
@@ -68,7 +68,7 @@ public interface Binding {
      * @param parameter information about the parameter
      * @return the number of consumed arguments, or -1 if unknown or irrelevant
      */
-    int getConsumedCount(ParameterData parameter);
+    int getConsumedCount(ParameterData<?> parameter);
     
     /**
      * Attempt to consume values (if required) from the given {@link ArgumentStack}
@@ -81,7 +81,7 @@ public interface Binding {
      * @throws ParameterException thrown if the parameter could not be formulated
      * @throws CommandException on a command exception
      */
-    Object bind(ParameterData parameter, ArgumentStack scoped, boolean onlyConsume) throws ParameterException, CommandException, InvocationTargetException;
+    Object bind(ParameterData<?> parameter, ArgumentStack scoped, boolean onlyConsume) throws ParameterException, CommandException, InvocationTargetException;
 
     /**
      * Get a list of suggestions for the given parameter and user arguments.
@@ -90,6 +90,6 @@ public interface Binding {
      * @param prefix what the user has typed so far (may be an empty string)
      * @return a list of suggestions
      */
-    List<String> getSuggestions(ParameterData parameter, String prefix);
+    List<String> getSuggestions(ParameterData<?> parameter, String prefix);
 
 }

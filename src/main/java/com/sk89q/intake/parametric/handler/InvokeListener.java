@@ -19,6 +19,7 @@
 
 package com.sk89q.intake.parametric.handler;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.SettableDescription;
@@ -54,6 +55,6 @@ public interface InvokeListener {
      * @param parameters a list of parameters
      * @param description the description to be updated
      */
-    void updateDescription(Object object, Method method, ParameterData[] parameters, SettableDescription description);
+    void updateDescription(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, SettableDescription description);
 
 }

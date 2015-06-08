@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
 /**
  * Indicates an optional parameter.
  */
-@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Optional {
     
     /**

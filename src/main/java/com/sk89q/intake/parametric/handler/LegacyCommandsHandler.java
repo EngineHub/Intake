@@ -19,15 +19,16 @@
 
 package com.sk89q.intake.parametric.handler;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.SettableDescription;
+import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.MissingParameterException;
-import com.sk89q.intake.parametric.UnconsumedParameterException;
-import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.parametric.ParameterData;
 import com.sk89q.intake.parametric.ParameterException;
+import com.sk89q.intake.parametric.UnconsumedParameterException;
 import com.sk89q.intake.parametric.binding.BindingBehavior;
 
 import java.lang.reflect.Method;
@@ -44,12 +45,12 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public boolean preProcess(Object object, Method method, ParameterData[] parameters, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
+    public boolean preProcess(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, CommandContext context, CommandLocals locals) throws CommandException, ParameterException {
         return true;
     }
 
     @Override
-    public boolean preInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) throws ParameterException {
+    public boolean preInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, Object[] args, CommandContext context, CommandLocals locals) throws ParameterException, UnconsumedParameterException {
         Command annotation = method.getAnnotation(Command.class);
         
         if (annotation != null) {
@@ -66,11 +67,11 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void postInvoke(Object object, Method method, ParameterData[] parameters, Object[] args, CommandContext context, CommandLocals locals) {
+    public void postInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, Object[] args, CommandContext context, CommandLocals locals) {
     }
 
     @Override
-    public void updateDescription(Object object, Method method, ParameterData[] parameters, SettableDescription description) {
+    public void updateDescription(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, SettableDescription description) {
         Command annotation = method.getAnnotation(Command.class);
         
         // Handle the case for old commands where no usage is set and all of its

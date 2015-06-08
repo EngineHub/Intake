@@ -19,12 +19,14 @@
 
 package com.sk89q.intake.parametric.handler;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.context.CommandContext;
 import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.ParameterData;
 import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.ParametricBuilder;
+import com.sk89q.intake.parametric.UnconsumedParameterException;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +38,7 @@ import java.lang.reflect.Method;
  * listeners and handlers can be registered, and all be run. However, if one handler
  * throws an exception, future handlers will not execute and the command will
  * not execute (if thrown in 
- * {@link #preInvoke(Object, Method, ParameterData[], Object[], CommandContext, CommandLocals)}).</p>
+ * {@link #preInvoke(Object, Method, ImmutableList, Object[], CommandContext, CommandLocals)}).</p>
  * 
  * @see InvokeListener the factory
  */
@@ -53,8 +55,8 @@ public interface InvokeHandler {
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    boolean preProcess(Object object, Method method, ParameterData[] parameters,
-                    CommandContext context, CommandLocals locals) throws CommandException, ParameterException;
+    boolean preProcess(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
+                    CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
 
     /**
      * Called before the parameter is invoked.
@@ -69,8 +71,8 @@ public interface InvokeHandler {
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    boolean preInvoke(Object object, Method method, ParameterData[] parameters,
-                   Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException;
+    boolean preInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
+                   Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
 
     /**
      * Called after the parameter is invoked.
@@ -84,7 +86,7 @@ public interface InvokeHandler {
      * @throws CommandException can be thrown for an error
      * @throws ParameterException on parameter error
      */
-    void postInvoke(Object object, Method method, ParameterData[] parameters,
-                    Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException;
+    void postInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
+                    Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
 
 }

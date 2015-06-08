@@ -137,17 +137,17 @@ public class BindingHelper implements Binding {
     }
 
     @Override
-    public int getConsumedCount(ParameterData parameter) {
+    public int getConsumedCount(ParameterData<?> parameter) {
         return match(parameter).annotation.consumedCount();
     }
 
     @Override
-    public BindingBehavior getBehavior(ParameterData parameter) {
+    public BindingBehavior getBehavior(ParameterData<?> parameter) {
         return match(parameter).annotation.behavior();
     }
 
     @Override
-    public Object bind(ParameterData parameter, ArgumentStack scoped,
+    public Object bind(ParameterData<?> parameter, ArgumentStack scoped,
             boolean onlyConsume) throws ParameterException, CommandException, InvocationTargetException {
         BoundMethod binding = match(parameter);
         List<Object> args = new ArrayList<Object>();

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * used on any other type, then the flag will be a value flag.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Switch {
 
     /**

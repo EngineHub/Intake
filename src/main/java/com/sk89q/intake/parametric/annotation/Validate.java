@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @see PrimitiveBindings where this validation is used
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Validate {
     
     /**

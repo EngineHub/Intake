@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * @see PrimitiveBindings a user of this annotation as a modifier
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Range {
     
     /**

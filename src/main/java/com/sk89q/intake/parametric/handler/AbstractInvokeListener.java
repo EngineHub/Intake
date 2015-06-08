@@ -19,6 +19,7 @@
 
 package com.sk89q.intake.parametric.handler;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.SettableDescription;
 import com.sk89q.intake.parametric.ParameterData;
 
@@ -31,7 +32,7 @@ import java.lang.reflect.Method;
 public abstract class AbstractInvokeListener implements InvokeListener {
 
     @Override
-    public void updateDescription(Object object, Method method, ParameterData[] parameters, SettableDescription description) {
+    public void updateDescription(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, SettableDescription description) {
     }
 
 }

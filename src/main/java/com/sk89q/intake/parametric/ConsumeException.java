@@ -19,33 +19,37 @@
 
 package com.sk89q.intake.parametric;
 
+import com.sk89q.intake.Parameter;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Thrown when there are leftover parameters that were not consumed, particular in the
- * case of the user providing too many parameters.
+ * Thrown when parameters being consumed raise an exception or error.
  */
-public class UnconsumedParameterException extends Exception {
-    
-    private String unconsumed;
+public class ConsumeException extends Exception {
 
-    /**
-     * Create a new instance.
-     *
-     * @param unconsumed the unconsumed tokens
-     */
-    public UnconsumedParameterException(String unconsumed) {
-        checkNotNull(unconsumed);
-        this.unconsumed = unconsumed;
+    private final Parameter parameter;
+
+    public ConsumeException(Parameter parameter, String message) {
+        super(message);
+        checkNotNull(parameter, "parameter");
+        this.parameter = parameter;
     }
 
-    /**
-     * Get the unconsumed tokens.
-     *
-     * @return unconsumed tokens
-     */
-    public String getUnconsumed() {
-        return unconsumed;
+    public ConsumeException(Parameter parameter, String message, Throwable cause) {
+        super(message, cause);
+        checkNotNull(parameter, "parameter");
+        this.parameter = parameter;
+    }
+
+    public ConsumeException(Parameter parameter, Throwable cause) {
+        super(cause);
+        checkNotNull(parameter, "parameter");
+        this.parameter = parameter;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
     }
 
 }

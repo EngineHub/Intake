@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * have no values left to consume.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Text {
 
 }

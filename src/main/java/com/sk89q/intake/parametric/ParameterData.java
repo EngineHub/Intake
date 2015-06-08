@@ -27,19 +27,39 @@ import com.sk89q.intake.parametric.binding.BindingBehavior;
 import com.sk89q.intake.parametric.binding.PrimitiveBindings;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
  * Describes a parameter in detail.
+ *
+ * @param <T> the type of the object that this parameter is associated with
  */
-public class ParameterData extends SettableParameter {
+public class ParameterData<T> extends SettableParameter {
 
+    private T target;
     private Binding binding;
     private Annotation classifier;
     private Annotation[] modifiers;
     private Type type;
-    
+
+    /**
+     * Create a new instance.
+     *
+     * @param target the object that this parameter is associated with
+     */
+    public ParameterData(T target) {
+        this.target = target;
+    }
+
+    /**
+     * Get the target that was provided in the constructor.
+     *
+     * @return the target
+     */
+    public T getTarget() {
+        return target;
+    }
+
     /**
      * Get the binding associated with this parameter.
      * 
@@ -152,45 +172,6 @@ public class ParameterData extends SettableParameter {
      */
     boolean isNonFlagConsumer() {
         return getBinding().getBehavior(this) != BindingBehavior.PROVIDES && !isValueFlag();
-    }
-    
-    /**
-     * Validate this parameter and its binding.
-     */
-    void validate(Method method, int parameterIndex) throws ParametricException {
-        // We can't have indeterminate consumers without @Switches otherwise
-        // it may screw up parameter processing for later bindings
-        BindingBehavior behavior = getBinding().getBehavior(this);
-        boolean indeterminate = (behavior == BindingBehavior.INDETERMINATE);
-        if (!isValueFlag() && indeterminate) {
-            throw new ParametricException(
-                    "@Switch missing for indeterminate consumer\n\n" +
-                    "Notably:\nFor the type " + type + ", the binding " + 
-                    getBinding().getClass().getCanonicalName() + 
-                    "\nmay or may not consume parameters (isIndeterminateConsumer(" + type + ") = true)" +
-                    "\nand therefore @Switch(flag) is required for parameter #" + parameterIndex + " of \n" +
-                    method.toGenericString());
-        }
-        
-        // getConsumedCount() better return -1 if the BindingBehavior is not CONSUMES
-        if (behavior != BindingBehavior.CONSUMES && binding.getConsumedCount(this) != -1) {
-            throw new ParametricException(
-                    "getConsumedCount() does not return -1 for binding " + 
-                    getBinding().getClass().getCanonicalName() + 
-                    "\neven though its behavior type is " + behavior.name() +
-                    "\nfor parameter #" + parameterIndex + " of \n" +
-                    method.toGenericString());
-        }
-        
-        // getConsumedCount() should not return 0 if the BindingBehavior is not PROVIDES
-        if (behavior != BindingBehavior.PROVIDES && binding.getConsumedCount(this) == 0) {
-            throw new ParametricException(
-                    "getConsumedCount() must not return 0 for binding " + 
-                    getBinding().getClass().getCanonicalName() + 
-                    "\nwhen its behavior type is " + behavior.name() + " and not PROVIDES " +
-                    "\nfor parameter #" + parameterIndex + " of \n" +
-                    method.toGenericString());
-        }
     }
 
 }
