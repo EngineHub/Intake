@@ -72,7 +72,7 @@ As a dependency,
 </dependencies>
 ```
 
-No release of Intake has been made. Only snapshot builds are available.
+We recommend using v3.1.2 for the version.
 
 **Note:** The API is subject to change in snapshot builds.
 
