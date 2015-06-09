@@ -19,14 +19,15 @@
 
 package com.sk89q.intake.parametric.handler;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.SettableDescription;
 import com.sk89q.intake.parametric.ParameterData;
 import com.sk89q.intake.parametric.ParametricBuilder;
 
-import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Listens to events related to {@link ParametricBuilder}.
@@ -50,11 +51,10 @@ public interface InvokeListener {
      * During creation of a {@link CommandCallable} by a {@link ParametricBuilder},
      * this will be called in case the description needs to be updated.
      * 
-     * @param object the object
-     * @param method the method
+     * @param annotations the annotations on the command
      * @param parameters a list of parameters
      * @param description the description to be updated
      */
-    void updateDescription(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters, SettableDescription description);
+    void updateDescription(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, SettableDescription description);
 
 }

@@ -19,16 +19,16 @@
 
 package com.sk89q.intake.parametric.handler;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.context.CommandContext;
-import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.parametric.ParameterData;
 import com.sk89q.intake.parametric.ParameterException;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.parametric.UnconsumedParameterException;
 
-import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Called before and after a command is invoked for commands executed by a
@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
  * listeners and handlers can be registered, and all be run. However, if one handler
  * throws an exception, future handlers will not execute and the command will
  * not execute (if thrown in 
- * {@link #preInvoke(Object, Method, ImmutableList, Object[], CommandContext, CommandLocals)}).</p>
+ * {@link #preInvoke(Set, List, Object[], CommandContext)}.</p>
  * 
  * @see InvokeListener the factory
  */
@@ -46,47 +46,41 @@ public interface InvokeHandler {
 
     /**
      * Called before parameters are processed.
-     * 
-     * @param object the object
-     * @param method the method
+     *
+     * @param annotations set of annotations that apply to the command
      * @param parameters the list of parameters
      * @param context the context
-     * @param locals the locals object
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    boolean preProcess(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
-                    CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
+    boolean preProcess(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters,
+                    CommandContext context) throws CommandException, ParameterException, UnconsumedParameterException;
 
     /**
      * Called before the parameter is invoked.
-     * 
-     * @param object the object
-     * @param method the method
+     *
+     * @param annotations set of annotations that apply to the command
      * @param parameters the list of parameters
      * @param args the arguments to be given to the method
      * @param context the context
-     * @param locals the locals object
      * @return true to permit invocation of command
      * @throws CommandException can be thrown for an error, which will stop invocation
      * @throws ParameterException on parameter error
      */
-    boolean preInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
-                   Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
+    boolean preInvoke(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters,
+                   Object[] args, CommandContext context) throws CommandException, ParameterException, UnconsumedParameterException;
 
     /**
      * Called after the parameter is invoked.
-     * 
-     * @param object the object
-     * @param method the method
+     *
+     * @param annotations set of annotations that apply to the command
      * @param parameters the list of parameters
      * @param args the arguments to be given to the method
      * @param context the context
-     * @param locals the locals object
      * @throws CommandException can be thrown for an error
      * @throws ParameterException on parameter error
      */
-    void postInvoke(Object object, Method method, ImmutableList<? extends ParameterData<?>> parameters,
-                    Object[] args, CommandContext context, CommandLocals locals) throws CommandException, ParameterException, UnconsumedParameterException;
+    void postInvoke(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters,
+                    Object[] args, CommandContext context) throws CommandException, ParameterException, UnconsumedParameterException;
 
 }

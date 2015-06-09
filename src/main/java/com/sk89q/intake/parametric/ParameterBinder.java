@@ -20,6 +20,7 @@
 package com.sk89q.intake.parametric;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sk89q.intake.Parameter;
@@ -177,6 +178,15 @@ public class ParameterBinder<T> {
      */
     public ImmutableList<Parameter> getUserProvidedParameters() {
         return ImmutableList.copyOf(userProvidedParameters);
+    }
+
+    /**
+     * Get an immutable list of value flags.
+     *
+     * @return list of value flags
+     */
+    public ImmutableSet<Character> getValueFlags() {
+        return ImmutableSet.copyOf(valueFlags);
     }
 
     /**
