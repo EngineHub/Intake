@@ -211,7 +211,7 @@ locals.put(User.class, caller);
 String[] parentCommands = new String[0]; // No parent commands
 
 // Note: Prefix characters (/, ., etc.) must be removed
-dispatcher.call("love bob", locals, String[] parentCommands);
+dispatcher.call("love bob", locals, parentCommands);
 ```
 
 Inspect a command:
