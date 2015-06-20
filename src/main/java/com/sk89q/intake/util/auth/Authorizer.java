@@ -19,7 +19,7 @@
 
 package com.sk89q.intake.util.auth;
 
-import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.argument.Namespace;
 
 /**
  * Tests whether permission is granted.
@@ -29,10 +29,10 @@ public interface Authorizer {
     /**
      * Tests whether permission is granted for the given context.
      *
-     * @param locals locals
-     * @param permission the permission string
-     * @return true if permitted
+     * @param namespace The namespace
+     * @param permission The permission string
+     * @return Whether the action is permitted
      */
-    boolean testPermission(CommandLocals locals, String permission);
+    boolean testPermission(Namespace namespace, String permission);
 
 }

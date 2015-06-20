@@ -20,16 +20,11 @@
 package com.sk89q.intake.dispatcher;
 
 import com.google.common.base.Joiner;
-import com.sk89q.intake.CommandCallable;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.CommandMapping;
-import com.sk89q.intake.ImmutableCommandMapping;
-import com.sk89q.intake.InvalidUsageException;
-import com.sk89q.intake.InvocationCommandException;
-import com.sk89q.intake.SettableDescription;
-import com.sk89q.intake.SettableParameter;
-import com.sk89q.intake.context.CommandContext;
-import com.sk89q.intake.context.CommandLocals;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.sk89q.intake.*;
+import com.sk89q.intake.argument.CommandContext;
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.util.auth.AuthorizationException;
 
 import java.util.ArrayList;
@@ -47,16 +42,29 @@ import java.util.Set;
 public class SimpleDispatcher implements Dispatcher {
 
     private final Map<String, CommandMapping> commands = new HashMap<String, CommandMapping>();
-    private final SettableDescription description = new SettableDescription();
+    private final Description description;
 
     /**
      * Create a new instance.
      */
     public SimpleDispatcher() {
-        description.getParameters().add(new SettableParameter("subcommand"));
-        SettableParameter extraArgs = new SettableParameter("...");
-        extraArgs.setOptional(true);
-        description.getParameters().add(extraArgs);
+        List<Parameter> parameters = Lists.newArrayList();
+
+        parameters.add(
+                new ImmutableParameter.Builder()
+                        .setName("subcommand")
+                        .setOptionType(OptionType.positional())
+                        .build());
+
+        parameters.add(
+                new ImmutableParameter.Builder()
+                        .setName("...")
+                        .setOptionType(OptionType.optionalPositional())
+                        .build());
+
+        description = new ImmutableDescription.Builder()
+                .setParameters(parameters)
+                .build();
     }
 
     @Override
@@ -108,9 +116,9 @@ public class SimpleDispatcher implements Dispatcher {
     }
 
     @Override
-    public boolean call(String arguments, CommandLocals locals, String[] parentCommands) throws CommandException, AuthorizationException {
+    public boolean call(String arguments, Namespace namespace, List<String> parentCommands) throws CommandException, InvocationCommandException, AuthorizationException {
         // We have permission for this command if we have permissions for subcommands
-        if (!testPermission(locals)) {
+        if (!testPermission(namespace)) {
             throw new AuthorizationException();
         }
 
@@ -122,13 +130,12 @@ public class SimpleDispatcher implements Dispatcher {
         } else if (split.length > 0) {
             String subCommand = split[0];
             String subArguments = Joiner.on(" ").join(Arrays.copyOfRange(split, 1, split.length));
-            String[] subParents = Arrays.copyOf(parentCommands, parentCommands.length + 1);
-            subParents[parentCommands.length] = subCommand;
+            List<String> subParents = ImmutableList.<String>builder().addAll(parentCommands).add(subCommand).build();
             CommandMapping mapping = get(subCommand);
 
             if (mapping != null) {
                 try {
-                    mapping.getCallable().call(subArguments, locals, subParents);
+                    mapping.getCallable().call(subArguments, namespace, subParents);
                 } catch (AuthorizationException e) {
                     throw e;
                 } catch (CommandException e) {
@@ -147,7 +154,7 @@ public class SimpleDispatcher implements Dispatcher {
     }
 
     @Override
-    public List<String> getSuggestions(String arguments, CommandLocals locals) throws CommandException {
+    public List<String> getSuggestions(String arguments, Namespace locals) throws CommandException {
         String[] split = CommandContext.split(arguments);
 
         if (split.length <= 1) {
@@ -181,12 +188,12 @@ public class SimpleDispatcher implements Dispatcher {
     }
 
     @Override
-    public SettableDescription getDescription() {
+    public Description getDescription() {
         return description;
     }
 
     @Override
-    public boolean testPermission(CommandLocals locals) {
+    public boolean testPermission(Namespace locals) {
         for (CommandMapping mapping : getCommands()) {
             if (mapping.getCallable().testPermission(locals)) {
                 return true;

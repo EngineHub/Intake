@@ -19,9 +19,11 @@
 
 package com.sk89q.intake;
 
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.completion.CommandCompleter;
-import com.sk89q.intake.context.CommandLocals;
 import com.sk89q.intake.util.auth.AuthorizationException;
+
+import java.util.List;
 
 /**
  * A command that can be executed.
@@ -29,32 +31,50 @@ import com.sk89q.intake.util.auth.AuthorizationException;
 public interface CommandCallable extends CommandCompleter {
 
     /**
-     * Execute the correct command based on the input.
+     * Execute the command.
      *
-     * <p>The implementing class must perform the necessary permission
-     * checks.</p>
+     * <p>{@code parentCommands} is a list of "parent" commands, including
+     * the current command, where each deeper command is appended to
+     * the list of parent commands.</p>
      *
-     * @param arguments the arguments
-     * @param locals the locals
-     * @param parentCommands a list of parent commands, with the first most entry being the top-level command
-     * @return the called command, or null if there was no command found
-     * @throws CommandException thrown on a command error
+     * <p>For example, if the command entered was {@code /world create ocean} and
+     * the command in question was the "create" command, then:</p>
+     *
+     * <ul>
+     *     <li>{@code arguments} would be {@code ocean}</li>
+     *     <li>{@code parentCommands} would be {@code world create}</li>
+     * </ul>
+     *
+     * <p>On the other hand, if the command was "world," then:</p>
+     *
+     * <ul>
+     *     <li>{@code arguments} would be {@code create ocean}</li>
+     *     <li>{@code parentCommands} would be {@code world}</li>
+     * </ul>
+     *
+     * @param arguments The arguments
+     * @param namespace Additional values used for execution
+     * @param parentCommands The list of parent commands
+     * @return Whether the command succeeded
+     * @throws CommandException If there is an error with the command
+     * @throws InvocationCommandException If there is an error with executing the command
+     * @throws AuthorizationException If there is a authorization error
      */
-    boolean call(String arguments, CommandLocals locals, String[] parentCommands) throws CommandException, AuthorizationException;
-    
+    boolean call(String arguments, Namespace namespace, List<String> parentCommands) throws CommandException, InvocationCommandException, AuthorizationException;
+
     /**
-     * Get an object describing this command.
-     * 
-     * @return the command description
+     * Get the object describing the command.
+     *
+     * @return The object describing the command
      */
     Description getDescription();
 
     /**
-     * Test whether this command can be executed with the given context.
+     * Test whether the user is permitted to use the command.
      *
-     * @param locals the locals
-     * @return true if execution is permitted
+     * @param namespace The namespace
+     * @return Whether permission is provided
      */
-    boolean testPermission(CommandLocals locals);
+    boolean testPermission(Namespace namespace);
 
 }

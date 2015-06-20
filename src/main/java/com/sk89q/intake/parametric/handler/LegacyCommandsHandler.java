@@ -19,16 +19,11 @@
 
 package com.sk89q.intake.parametric.handler;
 
-import com.google.common.collect.ImmutableList;
-import com.sk89q.intake.Command;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.SettableDescription;
-import com.sk89q.intake.context.CommandContext;
-import com.sk89q.intake.parametric.MissingParameterException;
-import com.sk89q.intake.parametric.ParameterData;
-import com.sk89q.intake.parametric.ParameterException;
-import com.sk89q.intake.parametric.UnconsumedParameterException;
-import com.sk89q.intake.parametric.binding.BindingBehavior;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.sk89q.intake.*;
+import com.sk89q.intake.argument.*;
+import com.sk89q.intake.parametric.ArgumentParser;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -46,22 +41,35 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public boolean preProcess(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, CommandContext context) throws CommandException, ParameterException {
+    public boolean preProcess(List<? extends Annotation> annotations, ArgumentParser parser, CommandArgs commandArgs) throws CommandException, ArgumentException {
         return true;
     }
 
     @Override
-    public boolean preInvoke(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, Object[] args, CommandContext context) throws ParameterException, UnconsumedParameterException {
+    public boolean preInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args, CommandArgs commandArgs) throws CommandException, ArgumentException {
         for (Annotation annotation : annotations) {
             if (annotation instanceof Command) {
                 Command command = (Command) annotation;
 
-                if (context.argsLength() < command.min()) {
-                    throw new MissingParameterException();
+                if (commandArgs.size() < command.min()) {
+                    throw new MissingArgumentException();
                 }
 
-                if (command.max() != -1 && context.argsLength() > command.max()) {
-                    throw new UnconsumedParameterException(context.getRemainingString(command.max()));
+                if (command.max() != -1 && commandArgs.size() > command.max()) {
+                    List<String> unconsumedArguments = Lists.newArrayList();
+
+                    while (true) {
+                        try {
+                            String value = commandArgs.next();
+                            if (commandArgs.position() >= command.max()) {
+                                unconsumedArguments.add(value);
+                            }
+                        } catch (MissingArgumentException ignored) {
+                            break;
+                        }
+                    }
+
+                    throw new UnusedArgumentException(Joiner.on(" ").join(unconsumedArguments));
                 }
             }
         }
@@ -70,11 +78,11 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
     }
 
     @Override
-    public void postInvoke(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, Object[] args, CommandContext context) {
+    public void postInvoke(List<? extends Annotation> annotations, ArgumentParser parser, Object[] args, CommandArgs commandArgs) throws CommandException, ArgumentException {
     }
 
     @Override
-    public void updateDescription(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, SettableDescription description) {
+    public void updateDescription(Set<Annotation> annotations, ArgumentParser parser, ImmutableDescription.Builder builder) {
         for (Annotation annotation : annotations) {
             if (annotation instanceof Command) {
                 Command command = (Command) annotation;
@@ -83,17 +91,8 @@ public class LegacyCommandsHandler extends AbstractInvokeListener implements Inv
                 // parameters are provider bindings, so its usage information would
                 // be blank and would imply that there were no accepted parameters
                 if (command.usage().isEmpty() && (command.min() > 0 || command.max() > 0)) {
-                    boolean hasUserParameters = false;
-
-                    for (ParameterData parameter : parameters) {
-                        if (parameter.getBinding().getBehavior(parameter) != BindingBehavior.PROVIDES) {
-                            hasUserParameters = true;
-                            break;
-                        }
-                    }
-
-                    if (!hasUserParameters) {
-                        description.overrideUsage("(unknown usage information)");
+                    if (!parser.getUserParameters().isEmpty()) {
+                        builder.setUsageOverride("(unknown usage information)");
                     }
                 }
             }

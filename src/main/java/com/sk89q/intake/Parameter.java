@@ -19,48 +19,34 @@
 
 package com.sk89q.intake;
 
+import java.util.List;
+
 /**
- * Describes a parameter utilized by a command.
- * 
- * @see Description
+ * Defines a parameter for a command.
  */
 public interface Parameter {
 
     /**
      * The name of the parameter.
-     * 
-     * @return the name
+     *
+     * @return The name of the parameter
      */
     String getName();
 
     /**
-     * Get the flag associated with this parameter.
-     * 
-     * @return the flag, or null if there is no flag associated
-     * @see #isValueFlag()
+     * The type of parameter.
+     *
+     * @return The type of parameter
      */
-    Character getFlag();
-    
+    OptionType getOptionType();
+
     /**
-     * Return whether the flag is a value flag.
-     * 
-     * @return true if the flag is a value flag
-     * @see #getFlag()
+     * The default value as a list of tokenized strings (but one single value).
+     *
+     * <p>If there is no default value, the returned list will be empty.</p>
+     *
+     * @return The default value
      */
-    boolean isValueFlag();
-    
-    /**
-     * Get whether this parameter is optional.
-     * 
-     * @return true if the parameter does not have to be specified
-     */
-    boolean isOptional();
-    
-    /**
-     * Get the default value as a string to be parsed by the binding.
-     * 
-     * @return a default value, or null if none is set
-     */
-    public String[] getDefaultValue();
+    List<String> getDefaultValue();
 
 }

@@ -37,14 +37,14 @@ public interface Description {
     /**
      * Get the list of parameters for this command.
      * 
-     * @return a list of parameters
+     * @return A list of parameters
      */
     List<Parameter> getParameters();
 
     /**
      * Get a short one-line description of this command.
      * 
-     * @return a description, or null if no description is available
+     * @return A description, or null if no description is available
      */
     @Nullable
     String getShortDescription();
@@ -52,7 +52,7 @@ public interface Description {
     /**
      * Get a longer help text about this command.
      * 
-     * @return a help text, or null if no help is available
+     * @return A help text, or null if no help is available
      */
     @Nullable
     String getHelp();
@@ -63,7 +63,7 @@ public interface Description {
      * <p>A usage string may look like 
      * {@code [-w &lt;world&gt;] &lt;var1&gt; &lt;var2&gt;}.</p>
      * 
-     * @return a usage string
+     * @return A usage string
      */
     String getUsage();
     
@@ -73,7 +73,7 @@ public interface Description {
      * <p>Permission data may or may not be available. This is only useful as a
      * potential hint.</p>
      * 
-     * @return the list of permissions
+     * @return The list of permissions
      */
     List<String> getPermissions();
 

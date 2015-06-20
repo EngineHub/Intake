@@ -37,7 +37,7 @@ public @interface Switch {
     /**
      * The flag character.
      * 
-     * @return the flag character (A-Z a-z 0-9 is acceptable)
+     * @return The flag character (A-Z a-z 0-9 is acceptable)
      */
     char value();
 

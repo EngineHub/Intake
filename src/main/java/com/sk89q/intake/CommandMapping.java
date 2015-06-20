@@ -27,28 +27,28 @@ public interface CommandMapping {
     /**
      * Get the primary alias.
      *
-     * @return the primary alias
+     * @return The primary alias
      */
     String getPrimaryAlias();
 
     /**
      * Get a list of all aliases.
      *
-     * @return aliases
+     * @return Aliases
      */
     String[] getAllAliases();
 
     /**
      * Get the callable
      *
-     * @return the callable
+     * @return The callable
      */
     CommandCallable getCallable();
 
     /**
      * Get the {@link Description} form the callable.
      *
-     * @return the description
+     * @return The description
      */
     Description getDescription();
 

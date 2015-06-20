@@ -35,7 +35,7 @@ public @interface Command {
      * A list of aliases for the command. The first alias is the name of
      * the command and considered the main alias.
      *
-     * @return aliases for a command
+     * @return Aliases for a command
      */
     String[] aliases();
 
@@ -45,21 +45,24 @@ public @interface Command {
      * <p>An example would be
      * {@code [-h &lt;value&gt;] &lt;name&gt; &lt;message&gt;}.</p>
      *
-     * @return usage instructions for a command
+     * <p>If a parametric command is used, this field is
+     * unnecessary because usage information will be generated automatically.</p>
+     *
+     * @return Usage instructions for a command
      */
     String usage() default "";
 
     /**
      * A short description of the command.
      *
-     * @return a short description for the command.
+     * @return A short description for the command.
      */
     String desc();
 
     /**
      * The minimum number of arguments. This should be 0 or above.
      *
-     * @return the minimum number of arguments
+     * @return The minimum number of arguments
      */
     int min() default 0;
 
@@ -67,7 +70,7 @@ public @interface Command {
      * The maximum number of arguments. Use -1 for an unlimited number
      * of arguments.
      *
-     * @return the maximum number of arguments
+     * @return The maximum number of arguments
      */
     int max() default -1;
 
@@ -78,7 +81,7 @@ public @interface Command {
      * Appending a flag with a : makes the flag character before a value flag,
      * meaning that if it is given, it must have a value.
      *
-     * @return flags matching a-zA-Z
+     * @return Flags matching a-zA-Z
      * @see #anyFlags() to see accept any flag
      */
     String flags() default "";
@@ -95,7 +98,7 @@ public @interface Command {
      *
      * <p>The value of this property overrides {@link #flags()}.</p>
      *
-     * @return true if so
+     * @return Whether all flags are accepted
      */
     boolean anyFlags() default false;
 

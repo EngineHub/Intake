@@ -35,12 +35,13 @@ public final class PrimaryAliasComparator implements Comparator<CommandMapping> 
      * An instance of this class.
      */
     public static final PrimaryAliasComparator INSTANCE = new PrimaryAliasComparator(null);
-    private final @Nullable Pattern removalPattern;
+    @Nullable
+    private final Pattern removalPattern;
 
     /**
      * Create a new instance.
      *
-     * @param removalPattern a regex to remove unwanted characters from the compared aliases
+     * @param removalPattern A regex to remove unwanted characters from the compared aliases
      */
     public PrimaryAliasComparator(@Nullable Pattern removalPattern) {
         this.removalPattern = removalPattern;

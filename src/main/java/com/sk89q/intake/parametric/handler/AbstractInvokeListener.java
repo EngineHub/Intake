@@ -19,11 +19,10 @@
 
 package com.sk89q.intake.parametric.handler;
 
-import com.sk89q.intake.SettableDescription;
-import com.sk89q.intake.parametric.ParameterData;
+import com.sk89q.intake.ImmutableDescription.Builder;
+import com.sk89q.intake.parametric.ArgumentParser;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,7 +32,6 @@ import java.util.Set;
 public abstract class AbstractInvokeListener implements InvokeListener {
 
     @Override
-    public void updateDescription(Set<Annotation> annotations, List<? extends ParameterData<?>> parameters, SettableDescription description) {
+    public void updateDescription(Set<Annotation> annotations, ArgumentParser parser, Builder descriptionBuilder) {
     }
-
 }

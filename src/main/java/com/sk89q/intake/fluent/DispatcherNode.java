@@ -45,20 +45,6 @@ public class DispatcherNode {
         this.parent = parent;
         this.dispatcher = dispatcher;
     }
-    
-    /**
-     * Set the description.
-     * 
-     * <p>This can only be used on {@link DispatcherNode}s returned by
-     * {@link #group(String...)}.</p>
-     * 
-     * @param description the description
-     * @return this object
-     */
-    public DispatcherNode describeAs(String description) {
-        dispatcher.getDescription().setDescription(description);
-        return this;
-    }
 
     /**
      * Register a command with this dispatcher.

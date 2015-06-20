@@ -20,7 +20,7 @@
 package com.sk89q.intake.completion;
 
 import com.sk89q.intake.CommandException;
-import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.argument.Namespace;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.List;
 public class NullCompleter implements CommandCompleter {
 
     @Override
-    public List<String> getSuggestions(String arguments, CommandLocals locals) throws CommandException {
+    public List<String> getSuggestions(String arguments, Namespace locals) throws CommandException {
         return Collections.emptyList();
     }
 

@@ -34,7 +34,7 @@ public @interface Optional {
     /**
      * The default value to use if no value is set.
      * 
-     * @return a string value, or an empty list
+     * @return A string value, or an empty list
      */
     String[] value() default {};
 

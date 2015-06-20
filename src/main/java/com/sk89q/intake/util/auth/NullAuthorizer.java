@@ -19,7 +19,7 @@
 
 package com.sk89q.intake.util.auth;
 
-import com.sk89q.intake.context.CommandLocals;
+import com.sk89q.intake.argument.Namespace;
 
 /**
  * An implementation of {@link Authorizer} that always returns false for
@@ -28,7 +28,7 @@ import com.sk89q.intake.context.CommandLocals;
 public class NullAuthorizer implements Authorizer {
 
     @Override
-    public boolean testPermission(CommandLocals locals, String permission) {
+    public boolean testPermission(Namespace namespace, String permission) {
         return false;
     }
 

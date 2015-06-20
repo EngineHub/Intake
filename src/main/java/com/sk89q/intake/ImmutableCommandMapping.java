@@ -34,8 +34,8 @@ public class ImmutableCommandMapping implements CommandMapping {
     /**
      * Create a new instance.
      * 
-     * @param callable the command callable
-     * @param alias a list of all aliases, where the first one is the primary one
+     * @param callable The command callable
+     * @param alias A list of all aliases, where the first one is the primary one
      */
     public ImmutableCommandMapping(CommandCallable callable, String... alias) {
         checkNotNull(callable);

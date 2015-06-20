@@ -25,19 +25,19 @@ package com.sk89q.intake.parametric;
  */
 public class ParametricException extends RuntimeException {
 
-    public ParametricException() {
+    protected ParametricException() {
         super();
     }
 
-    public ParametricException(String message, Throwable cause) {
+    protected ParametricException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ParametricException(String message) {
+    protected ParametricException(String message) {
         super(message);
     }
 
-    public ParametricException(Throwable cause) {
+    protected ParametricException(Throwable cause) {
         super(cause);
     }
 

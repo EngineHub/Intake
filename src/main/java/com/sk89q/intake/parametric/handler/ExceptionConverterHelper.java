@@ -42,7 +42,7 @@ public abstract class ExceptionConverterHelper implements ExceptionConverter {
     private final List<ExceptionHandler> handlers;
 
     @SuppressWarnings("unchecked")
-    public ExceptionConverterHelper() {
+    protected ExceptionConverterHelper() {
         List<ExceptionHandler> handlers = new ArrayList<ExceptionHandler>();
         
         for (Method method : this.getClass().getMethods()) {
@@ -54,8 +54,7 @@ public abstract class ExceptionConverterHelper implements ExceptionConverter {
             if (parameters.length == 1) {
                 Class<?> cls = parameters[0];
                 if (Throwable.class.isAssignableFrom(cls)) {
-                    handlers.add(new ExceptionHandler(
-                            (Class<? extends Throwable>) cls, method));
+                    handlers.add(new ExceptionHandler((Class<? extends Throwable>) cls, method));
                 }
             }
         }
@@ -66,10 +65,10 @@ public abstract class ExceptionConverterHelper implements ExceptionConverter {
     }
 
     @Override
-    public void convert(Throwable t) throws CommandException {
+    public void convert(Throwable t) throws CommandException, InvocationCommandException {
         Class<?> throwableClass = t.getClass();
         for (ExceptionHandler handler : handlers) {
-            if (handler.cls.isAssignableFrom(throwableClass)) {
+            if (handler.type.isAssignableFrom(throwableClass)) {
                 try {
                     handler.method.invoke(this, t);
                 } catch (InvocationTargetException e) {
@@ -86,20 +85,20 @@ public abstract class ExceptionConverterHelper implements ExceptionConverter {
         }
     }
     
-    private static class ExceptionHandler implements Comparable<ExceptionHandler> {
-        final Class<? extends Throwable> cls;
+    private static final class ExceptionHandler implements Comparable<ExceptionHandler> {
+        final Class<? extends Throwable> type;
         final Method method;
         
-        private ExceptionHandler(Class<? extends Throwable> cls, Method method) {
-            this.cls = cls;
+        private ExceptionHandler(Class<? extends Throwable> type, Method method) {
+            this.type = type;
             this.method = method;
         }
 
         @Override
         public int compareTo(ExceptionHandler o) {
-            if (cls.equals(o.cls)) {
+            if (type.equals(o.type)) {
                 return 0;
-            } else if (cls.isAssignableFrom(o.cls)) {
+            } else if (type.isAssignableFrom(o.type)) {
                 return 1;
             } else {
                 return -1;

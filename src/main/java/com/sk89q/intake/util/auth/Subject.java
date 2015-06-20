@@ -27,7 +27,7 @@ public interface Subject {
     /**
      * Get a list of groups that this subject is a part of.
      *
-     * @return an array containing a group name per entry
+     * @return An array containing a group name per entry
      */
     String[] getGroups();
 
@@ -35,16 +35,16 @@ public interface Subject {
      * Check whether this subject has been granted the given permission
      * and throw an exception on error.
      *
-     * @param permission the permission
-     * @throws AuthorizationException thrown if not permitted
+     * @param permission The permission
+     * @throws AuthorizationException If not permitted
      */
     void checkPermission(String permission) throws AuthorizationException;
 
     /**
      * Return whether this subject has the given permission.
      *
-     * @param permission the permission
-     * @return true if permission is granted
+     * @param permission The permission
+     * @return Whether permission is granted
      */
     boolean hasPermission(String permission);
 
