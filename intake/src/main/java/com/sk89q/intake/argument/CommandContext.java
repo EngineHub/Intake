@@ -63,7 +63,7 @@ public class CommandContext {
 
     /**
      * Parse the given array of arguments.
-     * <p/>
+     * 
      * <p>Empty arguments are removed from the list of arguments.</p>
      *
      * @param args             an array with arguments

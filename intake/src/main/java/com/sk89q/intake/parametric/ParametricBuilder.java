@@ -107,6 +107,8 @@ public class ParametricBuilder {
      *
      * <p>Bindings will still be resolved in the thread in which the
      * callable was called.</p>
+     *
+     * @param commandExecutor The executor
      */
     public void setCommandExecutor(ExecutorService commandExecutor) {
         checkNotNull(commandExecutor, "commandExecutor");

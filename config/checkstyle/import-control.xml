@@ -1,0 +1,14 @@
+<!DOCTYPE import-control PUBLIC
+    "-//Puppy Crawl//DTD Import Control 1.1//EN"
+    "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
+
+<import-control pkg="com.sk89q">
+  <allow pkg="java"/>
+  <allow pkg="javax"/>
+  <allow pkg="org.junit"/>
+  <allow pkg="org.hamcrest"/>
+  <allow pkg="org.mockito"/>
+  <allow pkg="com.sk89q"/>
+  <allow pkg="com.google.common"/>
+  <allow pkg="com.thoughtworks.paranamer"/>
+</import-control>

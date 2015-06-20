@@ -97,6 +97,7 @@ public abstract class OptionType {
     /**
      * Get the non-value boolean flag type of parameter.
      *
+     * @param flag The flag character
      * @return An option type
      */
     public static OptionType flag(Character flag) {
@@ -107,6 +108,7 @@ public abstract class OptionType {
     /**
      * Get the value flag type of parameter.
      *
+     * @param flag The flag character
      * @return An option type
      */
     public static OptionType valueFlag(Character flag) {
