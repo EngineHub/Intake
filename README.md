@@ -67,7 +67,7 @@ public class SetTypeCommand implements CommandCallable {
 
 The IoC component primarily parses arguments into Java objects:
 
-```
+```java
 Injector injector = Intake.createInjector();
 injector.install(new PrimitivesModule());
 injector.install(new DomainObjectsModule());
