@@ -282,7 +282,7 @@ public final class ArgumentParser {
             builder.setDefaultValue(defaultValue);
             Parameter parameter = builder.build();
 
-            Key<?> key = Key.get(type, classifier != null ? classifier.getClass() : null);
+            Key<?> key = Key.get(type, classifier != null ? classifier.annotationType() : null);
             Binding<?> binding = injector.getBinding(key);
             if (binding == null) {
                 throw new IllegalParameterException("Can't finding a binding for the parameter type '" + type + "'");
