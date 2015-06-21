@@ -11,10 +11,6 @@
     <!-- <module name="PackageDeclaration"/> Unlikely that we would miss this in a PR -->
     <module name="OuterTypeFilename"/> <!-- TypeName -> TypeName.java -->
 
-    <!--
-    Control package usage, so people don't insert Bukkit into WE where it shouldn't belong, etc.
-    It is a bit draconian, so update as necessary!
-    -->
     <module name="ImportControl">
       <property name="file" value="${basedir}/config/checkstyle/import-control.xml"/>
     </module>
@@ -27,12 +23,11 @@
       <property name="max" value="2"/>
     </module>
     <module name="SuperFinalize"/> <!-- We don't actually use this -->
-    <module name="JUnitTestCase"/> <!-- Checks tearDown(), setUp() etc. -->
 
     <!-- Style -->
     <module name="LeftCurly"> <!-- Left brace never goes on another line -->
       <property name="option" value="eol"/>
-    </module> <!-- We don't check right brance -->
+    </module> <!-- We don't check right brace -->
     <module name="DefaultComesLast"/> <!-- default case in switch should be last -->
     <module name="GenericWhitespace"/>
 
