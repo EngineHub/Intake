@@ -38,13 +38,13 @@ public class UniverseCommands {
     }
 
     @Command(aliases = "settype", desc = "Set the type of an object")
-    @Require("planet.settype")
+    @Require("body.settype")
     public void setType(Body body, CelestialType type) {
         body.setType(type);
     }
 
     @Command(aliases = "settemp", desc = "Set the mean temperature of an object")
-    @Require("planet.settemp")
+    @Require("body.settemp")
     public void setTemp(Body body, double meanTemp, @Switch('f') boolean inFahrenheit) {
         if (inFahrenheit) {
             meanTemp = fahrenheitToCelsius(meanTemp);
@@ -53,7 +53,7 @@ public class UniverseCommands {
     }
 
     @Command(aliases = "setdesc", desc = "Set the description of an object")
-    @Require("planet.setdesc")
+    @Require("body.setdesc")
     public void setDesc(Body body, @Text String desc) {
         // @Text is a classifier that overrides the normal String provider
         // This @Text provider uses up the rest of the arguments
@@ -61,7 +61,7 @@ public class UniverseCommands {
     }
 
     @Command(aliases = "info", desc = "Show information about an object")
-    @Require("planet.info")
+    @Require("body.info")
     public void info(Body body, @Switch('f') boolean inFahrenheit) {
         System.out.println("type: " + body.getType());
         if (inFahrenheit) {
@@ -75,7 +75,7 @@ public class UniverseCommands {
     }
 
     @Command(aliases = "delete", desc = "Delete a celestial body")
-    @Require("planet.deathstar")
+    @Require("body.deathstar")
     public void delete(Universe universe, String name) {
         universe.remove(name);
     }

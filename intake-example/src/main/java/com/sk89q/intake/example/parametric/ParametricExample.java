@@ -49,10 +49,10 @@ public final class ParametricExample {
 
     public static void main(String[] args) {
         Subject subject = new Subject("example_user");
-        subject.permit("planet.settype");
-        subject.permit("planet.settemp");
-        subject.permit("planet.setdesc");
-        subject.permit("planet.info");
+        subject.permit("body.settype");
+        subject.permit("body.settemp");
+        subject.permit("body.setdesc");
+        subject.permit("body.info");
 
         Universe universe = new Universe();
         universe.put("mercury", new Body().setType(CelestialType.PLANET));
@@ -78,24 +78,24 @@ public final class ParametricExample {
         Dispatcher dispatcher = new CommandGraph()
                 .builder(builder)
                     .commands()
-                    .group("planet")
+                    .group("body")
                         .registerMethods(new UniverseCommands())
                         .parent()
                     .graph()
                 .getDispatcher();
 
-        executeCommand(namespace, dispatcher, "planet info pluto");
-        executeCommand(namespace, dispatcher, "planet settype pluto dwarfplanet");
-        executeCommand(namespace, dispatcher, "planet info pluto");
-        executeCommand(namespace, dispatcher, "planet settype poseidon planet");
-        executeCommand(namespace, dispatcher, "planet settype pluto unknown");
-        executeCommand(namespace, dispatcher, "planet settemp mercury 167");
-        executeCommand(namespace, dispatcher, "planet setdesc mercury Closest to the Sun"); // Use of @Text on the String parameter
-        executeCommand(namespace, dispatcher, "planet info mercury");
-        executeCommand(namespace, dispatcher, "planet info -f mercury"); // Use of a flag (-f)
-        executeCommand(namespace, dispatcher, "planet settemp earth 59 -f"); // Use of a flag (-f)
-        executeCommand(namespace, dispatcher, "planet info earth");
-        executeCommand(namespace, dispatcher, "planet delete earth"); // Permission fail
+        executeCommand(namespace, dispatcher, "body info pluto");
+        executeCommand(namespace, dispatcher, "body settype pluto dwarfplanet");
+        executeCommand(namespace, dispatcher, "body info pluto");
+        executeCommand(namespace, dispatcher, "body settype poseidon planet");
+        executeCommand(namespace, dispatcher, "body settype pluto unknown");
+        executeCommand(namespace, dispatcher, "body settemp mercury 167");
+        executeCommand(namespace, dispatcher, "body setdesc mercury Closest to the Sun"); // Use of @Text on the String parameter
+        executeCommand(namespace, dispatcher, "body info mercury");
+        executeCommand(namespace, dispatcher, "body info -f mercury"); // Use of a flag (-f)
+        executeCommand(namespace, dispatcher, "body settemp earth 59 -f"); // Use of a flag (-f)
+        executeCommand(namespace, dispatcher, "body info earth");
+        executeCommand(namespace, dispatcher, "body delete earth"); // Permission fail
     }
 
     private static void executeCommand(Namespace namespace, CommandCallable callable, String command) {

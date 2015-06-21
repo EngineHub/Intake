@@ -5,20 +5,20 @@ Intake is a IoC-oriented command parsing library.
 Consider the following command:
 
 ```
-/planet settype pluto dwarfplanet
+/body settype pluto dwarfplanet
 ```
 
-Consider a theoretical `Planet` class and `CelestialType` enum in the project. The command above presumably would execute the following code:
+Consider a theoretical `Body` class and `CelestialType` enum in the project. The command above presumably would execute the following code:
 
 ```java
 pluto.setType(CelestialType.DWARF_PLANET);
 ```
 
-Rather than write argument parsing code in the routine for that command, it'd be simpler to simply request a `Planet` and a `CelestialType` from the user, so it'd be possible to write the command like so:
+Rather than write argument parsing code in the routine for that command, it'd be simpler to simply request a `Body` and a `CelestialType` from the user, so it'd be possible to write the command like so:
 
 ```java
-void setType(Planet planet, CelestialType type) {
-	planet.setType(type);
+void setType(Body body, CelestialType type) {
+	body.setType(type);
 }
 ```
 
@@ -44,14 +44,15 @@ It is possible to only use this part of Intake:
 
 ```java
 public class SetTypeCommand implements CommandCallable {
+
     @Override
-    public boolean call(String arguments, Namespace namespace, List<String> parentCommands) throws CommandException, InvocationCommandException, AuthorizationException {
+    public boolean call(String arguments, Namespace namespace, List<String> parentCommands) throws ... {
         String[] split = arguments.split(" ");
         if (split.length != 2) {
             throw new InvalidUsageException("Not enough arguments!", this);
         }
 
-        String planetName = split[0];
+        String bodyName = split[0];
         String typeName = split[1];
         
         // ...etc
@@ -70,28 +71,37 @@ The IoC component primarily parses arguments into Java objects:
 ```java
 Injector injector = Intake.createInjector();
 injector.install(new PrimitivesModule());
-injector.install(new DomainObjectsModule());
+injector.install(new UniverseModule());
 
 Builder argParserBuilder = new Builder(injector);
-argParserBuilder.addParameter(Planet.class);
+argParserBuilder.addParameter(Body.class);
 argParserBuilder.addParameter(CelestialType.class);
 
 ArgumentParser parser = argParserBuilder.build();
 parser.parseArguments(Arguments.of("pluto", "dwarfplanet")));
 ```
 
-`DomainObjectsModule` might look like this:
+`UniverseModule` might look like this:
 
 ```java
-public class DomainObjectsModule extends AbstractModule {
+public class UniverseModule extends AbstractModule {
+
+    private final Universe universe;
+
+    public UniverseModule(Universe universe) {
+        this.universe = universe;
+    }
 
     @Override
     protected void configure() {
-        bind(Planet.class).toProvider(new PlanetResolver());
-        bind(CelestialType.class).toProvider(new EnumResolver<CelestialType>(CelestialType.class);
+        bind(Universe.class).toInstance(universe);
+        bind(Body.class).toProvider(new BodyProvider(universe));
+        bind(CelestialType.class).toProvider(
+				new EnumProvider<CelestialType>(CelestialType.class));
     }
 
 }
+
 ```
 
 ### Parametric Commands
@@ -99,11 +109,13 @@ public class DomainObjectsModule extends AbstractModule {
 Define some commands:
 
 ```java
-public class PlanetCommands {
+public class UniverseCommands {
+
     @Command(aliases = "settype", desc = "Set the type of an object")
-	public void setType(Planet planet, CelestialType type) {
-		planet.setType(type);
-	}
+    public void setType(Body body, CelestialType type) {
+        body.setType(type);
+    }
+
 }
 ```
 
@@ -112,15 +124,15 @@ Then build the commands with the fluent API:
 ```java
 Injector injector = Intake.createInjector();
 injector.install(new PrimitivesModule());
-injector.install(new DomainObjectsModule());
+injector.install(new UniverseModule());
 
 ParametricBuilder builder = new ParametricBuilder(injector);
 
 Dispatcher dispatcher = new CommandGraph()
         .builder(builder)
             .commands()
-                .group("planet") // Subcommands
-                    .registerMethods(new PlanetCommands())
+                .group("body") // Subcommands
+                    .registerMethods(new UniverseCommands())
                     .parent()
                 .graph()
         .getDispatcher();
@@ -132,8 +144,10 @@ Execute a command:
 Namespace namespace = new Namespace();
 
 // Note: Prefix characters (/, ., etc.) must be removed
-dispatcher.call("planet settype pluto dwarfplanet", namespace, Collections.emptyList());
+dispatcher.call("body settype pluto dwarfplanet", namespace, Collections.<String>emptyList());
 ```
+
+**See this example** in the `com.sk89q.intake.example.parametric` package within the `intake-example` sub-module.
 
 ## Usage
 
@@ -146,7 +160,7 @@ There was a major overhaul in 4.0 to decompule the IoC portion from the parametr
 
 The documentation in the wiki is for 3.x. The examples in this README are for 4.x.
 
-### Maven
+### Resolution
 
 Currently, Intake is available in sk89q's Maven repository:
 
@@ -159,19 +173,24 @@ Currently, Intake is available in sk89q's Maven repository:
 </repositories>
 ```
 
-As a dependency,
+or for Gradle users:
 
-```xml
-<dependencies>
-  <dependency>
-    <groupId>com.sk89q</groupId>
-    <artifactId>intake</artifactId>
-    <version>{version here}</version>
-  </dependency>
-</dependencies>
+```groovy
+repositories {
+    maven { url "http://maven.sk89q.com/repo/" }
+}
 ```
 
-If you plan to use 3.x, use 3.1.2 for the version.
+Depending on whether you want to use 3.x (3.1.2 is recommended) or 4.x, the Maven group ID will vary:
+
+* 3.1.2:
+	* Group ID: `com.sk89q`
+	* Artifact ID: `intake`
+	* Version: `3.1.2`
+* 4.0:
+	* Group ID: `com.sk89q.intake`
+	* Artifact ID: `intake`
+	* Version: `4.0-SNAPSHOT`
 
 **Note:** The API is subject to change in snapshot builds.
 
