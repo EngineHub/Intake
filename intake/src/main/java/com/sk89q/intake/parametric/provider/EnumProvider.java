@@ -19,6 +19,7 @@
 
 package com.sk89q.intake.parametric.provider;
 
+import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.ArgumentParseException;
 import com.sk89q.intake.argument.CommandArgs;
@@ -78,7 +79,17 @@ public class EnumProvider<T extends Enum<T>> implements Provider<T> {
 
     @Override
     public List<String> getSuggestions(String prefix) {
-        return null;
+        List<String> suggestions = Lists.newArrayList();
+        String test = simplify(prefix);
+
+        for (T entry : enumClass.getEnumConstants()) {
+            String name = simplify(entry.name());
+            if (name.startsWith(test)) {
+                suggestions.add(entry.name().toLowerCase());
+            }
+        }
+
+        return suggestions;
     }
 
     private static String simplify(String t) {
