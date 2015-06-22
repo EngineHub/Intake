@@ -78,6 +78,7 @@ public class InvalidUsageException extends CommandException {
      * @param message the message
      * @param command the command
      * @param fullHelpSuggested true if the full help for the command should be shown
+     * @param cause the original cause
      */
     public InvalidUsageException(@Nullable String message, CommandCallable command, boolean fullHelpSuggested, @Nullable Throwable cause) {
         super(message, cause);
