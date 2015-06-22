@@ -17,27 +17,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.intake.example.shared.module;
+package com.sk89q.intake.example.parametric.model;
 
-import com.sk89q.intake.example.shared.model.Body;
-import com.sk89q.intake.example.shared.model.CelestialType;
-import com.sk89q.intake.example.shared.model.Universe;
-import com.sk89q.intake.parametric.AbstractModule;
-import com.sk89q.intake.parametric.provider.EnumProvider;
+import javax.annotation.Nullable;
 
-public class UniverseModule extends AbstractModule {
+public class Body {
 
-    private final Universe universe;
+    private CelestialType type;
+    private double meanTemperature;
+    @Nullable
+    private String description;
 
-    public UniverseModule(Universe universe) {
-        this.universe = universe;
+    public CelestialType getType() {
+        return type;
     }
 
-    @Override
-    protected void configure() {
-        bind(Universe.class).toInstance(universe);
-        bind(Body.class).toProvider(new BodyProvider(universe));
-        bind(CelestialType.class).toProvider(new EnumProvider<CelestialType>(CelestialType.class));
+    public Body setType(CelestialType type) {
+        this.type = type;
+        return this;
+    }
+
+    public double getMeanTemperature() {
+        return meanTemperature;
+    }
+
+    public Body setMeanTemperature(double meanTemperature) {
+        this.meanTemperature = meanTemperature;
+        return this;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
     }
 
 }

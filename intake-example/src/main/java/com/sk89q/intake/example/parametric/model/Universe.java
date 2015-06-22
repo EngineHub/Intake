@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.intake.example.shared.model;
+package com.sk89q.intake.example.parametric.model;
 
 import com.google.common.collect.ImmutableBiMap.Builder;
 import com.google.common.collect.ImmutableMap;

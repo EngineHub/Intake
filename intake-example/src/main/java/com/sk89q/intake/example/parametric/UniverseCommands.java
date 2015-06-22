@@ -21,9 +21,9 @@ package com.sk89q.intake.example.parametric;
 
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
-import com.sk89q.intake.example.shared.model.Body;
-import com.sk89q.intake.example.shared.model.CelestialType;
-import com.sk89q.intake.example.shared.model.Universe;
+import com.sk89q.intake.example.parametric.model.Body;
+import com.sk89q.intake.example.parametric.model.CelestialType;
+import com.sk89q.intake.example.parametric.model.Universe;
 import com.sk89q.intake.parametric.annotation.Switch;
 import com.sk89q.intake.parametric.annotation.Text;
 

@@ -17,16 +17,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.intake.example.shared.model;
+package com.sk89q.intake.example.parametric.module;
 
-public enum CelestialType {
+import com.sk89q.intake.example.parametric.model.Body;
+import com.sk89q.intake.example.parametric.model.CelestialType;
+import com.sk89q.intake.example.parametric.model.Universe;
+import com.sk89q.intake.parametric.AbstractModule;
+import com.sk89q.intake.parametric.provider.EnumProvider;
 
-    PLANET,
-    DWARF_PLANET,
-    ASTEROID,
-    COMET,
-    METEOROID,
-    STAR,
-    BROWN_DWARF
+public class UniverseModule extends AbstractModule {
+
+    private final Universe universe;
+
+    public UniverseModule(Universe universe) {
+        this.universe = universe;
+    }
+
+    @Override
+    protected void configure() {
+        bind(Universe.class).toInstance(universe);
+        bind(Body.class).toProvider(new BodyProvider(universe));
+        bind(CelestialType.class).toProvider(new EnumProvider<CelestialType>(CelestialType.class));
+    }
 
 }

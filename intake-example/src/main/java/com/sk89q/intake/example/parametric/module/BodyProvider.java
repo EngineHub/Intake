@@ -17,14 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.intake.example.shared.module;
+package com.sk89q.intake.example.parametric.module;
 
 import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.ArgumentParseException;
 import com.sk89q.intake.argument.CommandArgs;
-import com.sk89q.intake.example.shared.model.Body;
-import com.sk89q.intake.example.shared.model.Universe;
+import com.sk89q.intake.example.parametric.model.Body;
+import com.sk89q.intake.example.parametric.model.Universe;
 import com.sk89q.intake.parametric.Provider;
 import com.sk89q.intake.parametric.ProvisionException;
 
