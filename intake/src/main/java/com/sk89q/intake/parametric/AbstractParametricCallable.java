@@ -213,23 +213,23 @@ public abstract class AbstractParametricCallable implements CommandCallable {
 
         } catch (MissingArgumentException e) {
             if (e.getParameter() != null) {
-                throw new InvalidUsageException("Too few arguments! No value found for parameter '" + e.getParameter().getName() + "'", this);
+                throw new InvalidUsageException("Too few arguments! No value found for parameter '" + e.getParameter().getName() + "'", this, false, e);
             } else {
-                throw new InvalidUsageException("Too few arguments!", this);
+                throw new InvalidUsageException("Too few arguments!", this, false, e);
             }
 
         } catch (UnusedArgumentException e) {
-            throw new InvalidUsageException("Too many arguments! Unused arguments: " + e.getUnconsumed(), this);
+            throw new InvalidUsageException("Too many arguments! Unused arguments: " + e.getUnconsumed(), this, false, e);
 
         } catch (ArgumentParseException e) {
             if (e.getParameter() != null) {
-                throw new InvalidUsageException("For parameter '" + e.getParameter().getName() + "': " + e.getMessage(), this);
+                throw new InvalidUsageException("For parameter '" + e.getParameter().getName() + "': " + e.getMessage(), this, false, e);
             } else {
-                throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this);
+                throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, false, e);
             }
 
         } catch (ArgumentException e) { // Something else wrong with an argument
-            throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this);
+            throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, false, e);
 
         } catch (ProvisionException e) { // Argument binding failed
             throw new InvocationCommandException("Internal error occurred: " + e.getMessage(), e);

@@ -69,7 +69,18 @@ public class InvalidUsageException extends CommandException {
      * @param fullHelpSuggested true if the full help for the command should be shown
      */
     public InvalidUsageException(@Nullable String message, CommandCallable command, boolean fullHelpSuggested) {
-        super(message);
+        this(message, command, fullHelpSuggested, null);
+    }
+
+    /**
+     * Create a new instance with a message.
+     *
+     * @param message the message
+     * @param command the command
+     * @param fullHelpSuggested true if the full help for the command should be shown
+     */
+    public InvalidUsageException(@Nullable String message, CommandCallable command, boolean fullHelpSuggested, @Nullable Throwable cause) {
+        super(message, cause);
         checkNotNull(command);
         this.command = command;
         this.fullHelpSuggested = fullHelpSuggested;
