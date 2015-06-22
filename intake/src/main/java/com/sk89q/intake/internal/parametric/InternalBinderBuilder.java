@@ -20,11 +20,13 @@
 package com.sk89q.intake.internal.parametric;
 
 import com.sk89q.intake.parametric.Key;
+import com.sk89q.intake.parametric.annotation.Classifier;
 import com.sk89q.intake.parametric.binder.BindingBuilder;
 import com.sk89q.intake.parametric.Provider;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,6 +44,15 @@ class InternalBinderBuilder<T> implements BindingBuilder<T> {
 
     @Override
     public BindingBuilder<T> annotatedWith(@Nullable Class<? extends Annotation> annotation) {
+        if (annotation != null) {
+            if (annotation.getAnnotation(Classifier.class) == null) {
+                throw new IllegalArgumentException("The annotation type " + annotation.getName() + " must be marked with @" + Classifier.class.getName() + " to be used as a classifier");
+            }
+
+            if (annotation.getAnnotation(Retention.class) == null) {
+                throw new IllegalArgumentException("The annotation type " + annotation.getName() + " must be marked with @" + Retention.class.getName() + " to appear at runtime");
+            }
+        }
         key = key.setClassifier(annotation);
         return this;
     }
