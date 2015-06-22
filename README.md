@@ -26,47 +26,32 @@ The purpose of Intake is to make that possible.
 
 ## Overview
 
-Intake contains several components:
+Intake consists of four parts:
 
-* A set of generic command library (free of any IoC) with support for command introspection, nested commands, and argument completion.
-* The IoC portion that allows the registration of bindings and provider. The IoC portion has an API very similar to the Google Guice library.
-* A "parametric binding" component that applies the IoC component to classes with methods that that have been annotated with `@Command` and generates objects that work with the generic command library.
-* A barebones fluent API that works with the command library and the parametric binding component.
+### Command Framework
 
-### Command Library
+The command framework consists of some basic interfaces and classes:
 
-The command library contains some crucial interfaces:
+* Commands are modeled by `CommandCallable`
+* Groups of sub-commands are modeled by `Dispatcher`
+* Descriptions of commands are modeled by `Description`
+* Individual parameters (for introspection) are modeled by `Parameter`
+* Commands that can suggest completions are modeled by `CommandCompleter`
+* Arguments (accessed as a stack) are represented by `CommandArgs`
 
-* `CommandCallable` represents a command that can be called. There is a `call(...)` method that accepts arguments.
-* `Dispatcher` represents a group of commands, which is used for nested commands.
+There is also support for:
 
-It is possible to only use this part of Intake:
+* Boolean single-character flags (`/command -f`)
+* Value flags (`/command -v value`)
+* Testing whether a user has permission to execute a command
 
-```java
-public class SetTypeCommand implements CommandCallable {
+The goal of the framework is to provide a compromise between a heavily-opinionated framework and a flexible one.
 
-    @Override
-    public boolean call(String arguments, Namespace namespace, List<String> parentCommands) throws ... {
-        String[] split = arguments.split(" ");
-        if (split.length != 2) {
-            throw new InvalidUsageException("Not enough arguments!", this);
-        }
+### Parameter Injection
 
-        String bodyName = split[0];
-        String typeName = split[1];
-        
-        // ...etc
-        
-        return true;
-    }
+The parameter injection framework provides IoC-oriented argument parsing and completion.
 
-    // ...
-}
-```
-
-### IoC Component
-
-The IoC component primarily parses arguments into Java objects:
+Raw use of the injection framework can be best seen in an example:
 
 ```java
 Injector injector = Intake.createInjector();
@@ -80,6 +65,8 @@ argParserBuilder.addParameter(CelestialType.class);
 ArgumentParser parser = argParserBuilder.build();
 parser.parseArguments(Arguments.of("pluto", "dwarfplanet")));
 ```
+
+ArgumentParser finds "providers" for the Body and CelestialType Java types, which are then later utilized to create object instances from the provided arguments.
 
 `UniverseModule` might look like this:
 
@@ -101,12 +88,13 @@ public class UniverseModule extends AbstractModule {
     }
 
 }
-
 ```
+
+The parameter injection framework has strong similarity to Google Guice's API.
 
 ### Parametric Commands
 
-Define some commands:
+The parametric command framework provides an opinionated method of defining commands using classes:
 
 ```java
 public class UniverseCommands {
@@ -119,35 +107,16 @@ public class UniverseCommands {
 }
 ```
 
-Then build the commands with the fluent API:
+It makes use of the parameter injection framework.
 
-```java
-Injector injector = Intake.createInjector();
-injector.install(new PrimitivesModule());
-injector.install(new UniverseModule());
+### Fluent API
 
-ParametricBuilder builder = new ParametricBuilder(injector);
+There is also a fluent API that combines the command framework with the parametric command framework.
 
-Dispatcher dispatcher = new CommandGraph()
-        .builder(builder)
-            .commands()
-                .group("body") // Subcommands
-                    .registerMethods(new UniverseCommands())
-                    .parent()
-                .graph()
-        .getDispatcher();
-```
 
-Execute a command:
+## Examples
 
-```java
-Namespace namespace = new Namespace();
-
-// Note: Prefix characters (/, ., etc.) must be removed
-dispatcher.call("body settype pluto dwarfplanet", namespace, Collections.<String>emptyList());
-```
-
-**See this example** in the `com.sk89q.intake.example.parametric` package within the `intake-example` sub-module.
+To see some example code, check out the [example projects](intake-example/src/main/java/com/sk89q/intake/example).
 
 ## Usage
 
@@ -202,17 +171,21 @@ If you are moving from 3.x to 4.x, then the changes have not been too major (exc
 
 ## Documentation
 
-Documentation is currently a work-in-progress.
+If you are using 3.x, find work-in-progress documentation at https://github.com/sk89q/Intake/wiki
 
-Find it here: https://github.com/sk89q/Intake/wiki
-
-The documentation in the wiki is for 3.x. The examples in this README are for 4.x.
+However, if you are using 4.x, you are better looking at examples found in the repository.
 
 ## Compiling
 
-Use Maven 3 to compile Intake.
+Use Gradle to compile Intake.
 
-    mvn clean package
+If you are on Linux or Mac OS X, run the following in your terminal:
+
+    ./gradlew clean build
+
+If you are on Windows, run the following in your command prompt:
+
+    gradlew clean build
 
 ## Contributing
 
