@@ -24,6 +24,8 @@ import com.sk89q.intake.CommandException;
 
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class CommandContext {
 
     private final String command;
@@ -348,6 +350,78 @@ public class CommandContext {
 
     public Namespace getNamespace() {
         return namespace;
+    }
+
+    public static class Builder {
+
+        private String[] arguments = new String[0];
+        private Set<Character> expectedValueFlags = ImmutableSet.of();
+        private boolean allowHangingFlag = false;
+        private Namespace namespace = new Namespace();
+
+        public String[] getArguments() {
+            return Arrays.copyOf(arguments, arguments.length);
+        }
+
+        public Builder setArguments(String[] arguments) {
+            checkNotNull(arguments, "arguments");
+            String[] newArguments = new String[arguments.length + 1];
+            newArguments[0] = "_";
+            System.arraycopy(arguments, 0, newArguments, 1, arguments.length);
+            this.arguments = newArguments;
+            return this;
+        }
+
+        public Builder setArguments(String arguments) {
+            checkNotNull(arguments, "arguments");
+            setArguments(split(arguments));
+            return this;
+        }
+
+        public Builder setCommandAndArguments(String[] arguments) {
+            checkNotNull(arguments, "arguments");
+            this.arguments = Arrays.copyOf(arguments, arguments.length);
+            return this;
+        }
+
+        public Builder setCommandAndArguments(String arguments) {
+            checkNotNull(arguments, "arguments");
+            setCommandAndArguments(split(arguments));
+            return this;
+        }
+
+        public Set<Character> getExpectedValueFlags() {
+            return expectedValueFlags;
+        }
+
+        public Builder setExpectedValueFlags(Set<Character> expectedValueFlags) {
+            this.expectedValueFlags = ImmutableSet.copyOf(expectedValueFlags);
+            return this;
+        }
+
+        public boolean isAllowHangingFlag() {
+            return allowHangingFlag;
+        }
+
+        public Builder setAllowHangingFlag(boolean allowHangingFlag) {
+            this.allowHangingFlag = allowHangingFlag;
+            return this;
+        }
+
+        public Namespace getNamespace() {
+            return namespace;
+        }
+
+        public Builder setNamespace(Namespace namespace) {
+            checkNotNull(namespace, "namespace");
+            this.namespace = namespace;
+            return this;
+        }
+
+        public CommandContext build() throws CommandException {
+            return new CommandContext(arguments, expectedValueFlags, allowHangingFlag, namespace);
+        }
+
     }
 
 }
