@@ -197,6 +197,8 @@ public abstract class AbstractParametricCallable implements CommandCallable {
                 return true; // Abort early
             }
 
+            namespace.put(CommandArgs.class, commandArgs);
+
             // invoke
             builder.getCommandExecutor().submit(new Callable<Object>() {
                 @Override

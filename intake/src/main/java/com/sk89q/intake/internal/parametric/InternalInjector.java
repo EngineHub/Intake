@@ -22,6 +22,7 @@ package com.sk89q.intake.internal.parametric;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.parametric.*;
 import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.parametric.provider.DefaultModule;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
@@ -32,6 +33,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class InternalInjector implements Injector {
 
     private final BindingList bindings = new BindingList();
+
+    public InternalInjector() {
+        install(new DefaultModule());
+    }
 
     @Override
     public void install(Module module) {
