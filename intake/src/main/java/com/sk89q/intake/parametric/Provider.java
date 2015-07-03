@@ -60,9 +60,11 @@ public interface Provider<T> {
      * <p>If no suggestions could be enumerated, an empty list should
      * be returned.</p>
      *
+     * @param arguments The arguments
+     * @param modifiers The modifiers on the parameter
      * @param prefix What the user has typed so far (may be an empty string)
      * @return A list of suggestions
      */
-    List<String> getSuggestions(String prefix);
+    List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix);
 
 }

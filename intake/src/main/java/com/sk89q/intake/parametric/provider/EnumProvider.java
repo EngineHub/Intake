@@ -78,7 +78,7 @@ public class EnumProvider<T extends Enum<T>> implements Provider<T> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix) {
         List<String> suggestions = Lists.newArrayList();
         String test = simplify(prefix);
 

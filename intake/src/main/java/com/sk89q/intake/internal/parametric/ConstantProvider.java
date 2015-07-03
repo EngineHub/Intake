@@ -47,7 +47,7 @@ class ConstantProvider<T> implements Provider<T> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix) {
         return Collections.emptyList();
     }
 
