@@ -83,7 +83,7 @@ public final class ImmutableDescription implements Description {
             if (!first) {
                 builder.append(" ");
             }
-            builder.append(parameter);
+            builder.append(parameter.getName());
             first = false;
         }
         
