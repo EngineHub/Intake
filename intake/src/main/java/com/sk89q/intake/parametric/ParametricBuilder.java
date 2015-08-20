@@ -50,7 +50,7 @@ public class ParametricBuilder {
     private final List<ExceptionConverter> exceptionConverters = Lists.newArrayList();
     private Authorizer authorizer = new NullAuthorizer();
     private CommandCompleter defaultCompleter = new NullCompleter();
-    private ExecutorService commandExecutor = MoreExecutors.sameThreadExecutor();
+    private CommandExecutor commandExecutor = new CommandExecutorWrapper(MoreExecutors.sameThreadExecutor());
 
     public ParametricBuilder(Injector injector) {
         this.injector = injector;
@@ -98,7 +98,7 @@ public class ParametricBuilder {
      *
      * @return The command executor
      */
-    public ExecutorService getCommandExecutor() {
+    public CommandExecutor getCommandExecutor() {
         return commandExecutor;
     }
 
@@ -111,6 +111,18 @@ public class ParametricBuilder {
      * @param commandExecutor The executor
      */
     public void setCommandExecutor(ExecutorService commandExecutor) {
+        setCommandExecutor(new CommandExecutorWrapper(commandExecutor));
+    }
+
+    /**
+     * Set the executor service used to invoke the actual command.
+     *
+     * <p>Bindings will still be resolved in the thread in which the
+     * callable was called.</p>
+     *a
+     * @param commandExecutor The executor
+     */
+    public void setCommandExecutor(CommandExecutor commandExecutor) {
         checkNotNull(commandExecutor, "commandExecutor");
         this.commandExecutor = commandExecutor;
     }

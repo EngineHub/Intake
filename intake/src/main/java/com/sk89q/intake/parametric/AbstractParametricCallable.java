@@ -206,7 +206,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
                     AbstractParametricCallable.this.call(args);
                     return null;
                 }
-            }).get();
+            }, commandArgs).get();
 
             // postInvoke
             for (InvokeHandler handler : handlers) {
