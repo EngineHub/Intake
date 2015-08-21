@@ -157,7 +157,7 @@ public class ParametricBuilder {
      * @return The command executor
      * @throws ParametricException Thrown on an error
      */
-    private CommandCallable build(Object object, Method method) throws ParametricException {
+    public CommandCallable build(Object object, Method method) throws ParametricException {
         return MethodCallable.create(this, object, method);
     }
 
