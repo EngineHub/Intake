@@ -76,7 +76,7 @@ public class SimpleDispatcher implements Dispatcher {
             String lower = a.toLowerCase();
             if (commands.containsKey(lower)) {
                 throw new IllegalArgumentException(
-                        "Replacing commands is currently undefined behavior");
+                        "Can't add the command '" + a + "' because SimpleDispatcher does not support replacing commands");
             }
         }
         
