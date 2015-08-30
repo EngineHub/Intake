@@ -219,7 +219,7 @@ public abstract class OptionType {
         public CommandArgs transform(CommandArgs arguments) {
             String value = arguments.getFlags().get(flag);
             if (value == null) {
-                value = "";
+                return Arguments.copyOf(ImmutableList.<String>of(), arguments.getFlags(), arguments.getNamespace());
             }
             return Arguments.copyOf(ImmutableList.of(value), arguments.getFlags(), arguments.getNamespace());
         }
