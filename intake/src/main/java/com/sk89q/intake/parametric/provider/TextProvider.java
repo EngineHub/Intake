@@ -37,9 +37,7 @@ class TextProvider extends StringProvider {
         StringBuilder builder = new StringBuilder();
         boolean first = true;
         while (true) {
-            if (first) {
-                first = false;
-            } else {
+            if (!first) {
                 builder.append(" ");
             }
             try {
@@ -47,6 +45,10 @@ class TextProvider extends StringProvider {
             } catch (MissingArgumentException ignored) {
                 break;
             }
+            first = false;
+        }
+        if (first) {
+            throw new MissingArgumentException();
         }
         String v = builder.toString();
         validate(v, modifiers);
