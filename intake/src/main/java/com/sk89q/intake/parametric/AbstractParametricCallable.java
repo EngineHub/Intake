@@ -25,7 +25,14 @@ import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvalidUsageException;
 import com.sk89q.intake.InvocationCommandException;
-import com.sk89q.intake.argument.*;
+import com.sk89q.intake.argument.ArgumentException;
+import com.sk89q.intake.argument.ArgumentParseException;
+import com.sk89q.intake.argument.Arguments;
+import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.argument.CommandContext;
+import com.sk89q.intake.argument.MissingArgumentException;
+import com.sk89q.intake.argument.Namespace;
+import com.sk89q.intake.argument.UnusedArgumentException;
 import com.sk89q.intake.parametric.handler.ExceptionConverter;
 import com.sk89q.intake.parametric.handler.InvokeHandler;
 import com.sk89q.intake.parametric.handler.InvokeListener;
@@ -162,7 +169,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
 
         // Provide help if -? is specified
         if (context.hasFlag('?')) {
-            throw new InvalidUsageException(null, this, true);
+            throw new InvalidUsageException(null, this, parentCommands, true);
         }
 
         for (InvokeListener listener : builder.getInvokeListeners()) {
@@ -215,23 +222,23 @@ public abstract class AbstractParametricCallable implements CommandCallable {
 
         } catch (MissingArgumentException e) {
             if (e.getParameter() != null) {
-                throw new InvalidUsageException("Too few arguments! No value found for parameter '" + e.getParameter().getName() + "'", this, false, e);
+                throw new InvalidUsageException("Too few arguments! No value found for parameter '" + e.getParameter().getName() + "'", this, parentCommands, false, e);
             } else {
-                throw new InvalidUsageException("Too few arguments!", this, false, e);
+                throw new InvalidUsageException("Too few arguments!", this, parentCommands, false, e);
             }
 
         } catch (UnusedArgumentException e) {
-            throw new InvalidUsageException("Too many arguments! Unused arguments: " + e.getUnconsumed(), this, false, e);
+            throw new InvalidUsageException("Too many arguments! Unused arguments: " + e.getUnconsumed(), this, parentCommands, false, e);
 
         } catch (ArgumentParseException e) {
             if (e.getParameter() != null) {
-                throw new InvalidUsageException("For parameter '" + e.getParameter().getName() + "': " + e.getMessage(), this, false, e);
+                throw new InvalidUsageException("For parameter '" + e.getParameter().getName() + "': " + e.getMessage(), this, parentCommands, false, e);
             } else {
-                throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, false, e);
+                throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, parentCommands, false, e);
             }
 
         } catch (ArgumentException e) { // Something else wrong with an argument
-            throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, false, e);
+            throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, parentCommands, false, e);
 
         } catch (ProvisionException e) { // Argument binding failed
             throw new InvocationCommandException("Internal error occurred: " + e.getMessage(), e);

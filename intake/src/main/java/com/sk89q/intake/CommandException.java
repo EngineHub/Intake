@@ -19,12 +19,8 @@
 
 package com.sk89q.intake;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Thrown when an executed command raises an error or when execution of
@@ -47,31 +43,6 @@ public class CommandException extends Exception {
 
     public CommandException(Throwable cause) {
         super(cause);
-    }
-
-    public void prependStack(String name) {
-        checkNotNull(name);
-        commandStack.add(name);
-    }
-
-    public String getCommandUsed(String prefix, @Nullable String spacedSuffix) {
-        checkNotNull(prefix);
-        StringBuilder builder = new StringBuilder();
-        builder.append(prefix);
-        ListIterator<String> li = commandStack.listIterator(commandStack.size());
-        while (li.hasPrevious()) {
-            if (li.previousIndex() != commandStack.size() - 1) {
-                builder.append(" ");
-            }
-            builder.append(li.previous());
-        }
-        if (spacedSuffix != null) {
-            if (builder.length() > 0) {
-                builder.append(" ");
-            }
-            builder.append(spacedSuffix);
-        }
-        return builder.toString().trim();
     }
 
 }
