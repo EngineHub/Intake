@@ -19,7 +19,7 @@
 
 package com.sk89q.intake.argument;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.Map;
@@ -37,9 +37,13 @@ class StringListArgs extends AbstractCommandArgs {
         checkNotNull(arguments, "arguments");
         checkNotNull(flags, "flags");
         checkNotNull(namespace, "namespace");
-        this.arguments = ImmutableList.copyOf(arguments);
+        this.arguments = Lists.newArrayList(arguments);
         this.flags = flags;
         this.namespace = namespace;
+    }
+
+    protected void insert(String argument) {
+        arguments.add(position, argument);
     }
 
     @Override
