@@ -56,13 +56,17 @@ final class MethodCallable extends AbstractParametricCallable {
     }
 
     @Override
-    protected void call(Object[] args) throws InvocationCommandException {
+    protected void call(Object[] args) throws Exception {
         try {
             method.invoke(object, args);
         } catch (IllegalAccessException e) {
             throw new InvocationCommandException("Could not invoke method '" + method + "'", e);
         } catch (InvocationTargetException e) {
-            throw new InvocationCommandException("Could not invoke method '" + method + "'", e);
+            if (e.getCause() instanceof Exception) {
+                throw (Exception) e.getCause();
+            } else {
+                throw new InvocationCommandException("Could not invoke method '" + method + "'", e);
+            }
         }
     }
 

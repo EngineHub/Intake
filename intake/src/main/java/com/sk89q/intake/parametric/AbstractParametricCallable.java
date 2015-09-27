@@ -207,13 +207,17 @@ public abstract class AbstractParametricCallable implements CommandCallable {
             namespace.put(CommandArgs.class, commandArgs);
 
             // invoke
-            builder.getCommandExecutor().submit(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    AbstractParametricCallable.this.call(args);
-                    return null;
-                }
-            }, commandArgs).get();
+            try {
+                builder.getCommandExecutor().submit(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        AbstractParametricCallable.this.call(args);
+                        return null;
+                    }
+                }, commandArgs).get();
+            } catch (ExecutionException e) {
+                throw e.getCause();
+            }
 
             // postInvoke
             for (InvokeHandler handler : handlers) {
@@ -240,18 +244,21 @@ public abstract class AbstractParametricCallable implements CommandCallable {
         } catch (ArgumentException e) { // Something else wrong with an argument
             throw new InvalidUsageException("Error parsing arguments: " + e.getMessage(), this, parentCommands, false, e);
 
+        } catch (CommandException e) { // Thrown by commands
+            throw e;
+
         } catch (ProvisionException e) { // Argument binding failed
             throw new InvocationCommandException("Internal error occurred: " + e.getMessage(), e);
 
-        } catch (ExecutionException e) { // Thrown on execution error
-            for (ExceptionConverter converter : builder.getExceptionConverters()) {
-                converter.convert(e.getCause());
-            }
-
-            throw new InvocationCommandException(e.getMessage(), e.getCause());
-
         } catch (InterruptedException e) { // Thrown by execution
             throw new InvocationCommandException("Execution of the command was interrupted", e.getCause());
+
+        } catch (Throwable e) { // Catch all
+            for (ExceptionConverter converter : builder.getExceptionConverters()) {
+                converter.convert(e);
+            }
+
+            throw new InvocationCommandException(e.getMessage(), e);
         }
 
         return true;
@@ -261,10 +268,9 @@ public abstract class AbstractParametricCallable implements CommandCallable {
      * Called with parsed arguments to execute the command.
      *
      * @param args The arguments parsed into the appropriate Java objects
-     * @throws CommandException Thrown on a command error
-     * @throws InvocationCommandException Thrown on an error executing the command
+     * @throws Exception on any exception
      */
-    protected abstract void call(Object[] args) throws CommandException, InvocationCommandException;
+    protected abstract void call(Object[] args) throws Exception;
 
     @Override
     public List<String> getSuggestions(String arguments, Namespace locals) throws CommandException {

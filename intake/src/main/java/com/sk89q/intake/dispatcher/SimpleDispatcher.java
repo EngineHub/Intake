@@ -140,6 +140,8 @@ public class SimpleDispatcher implements Dispatcher {
                     throw e;
                 } catch (CommandException e) {
                     throw e;
+                } catch (InvocationCommandException e) {
+                    throw e;
                 } catch (Throwable t) {
                     throw new InvocationCommandException(t);
                 }
