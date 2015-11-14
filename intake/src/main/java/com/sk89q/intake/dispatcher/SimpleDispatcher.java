@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import com.sk89q.intake.*;
 import com.sk89q.intake.argument.CommandContext;
 import com.sk89q.intake.argument.Namespace;
+import com.sk89q.intake.Default;
 import com.sk89q.intake.util.auth.AuthorizationException;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 /**
  * A simple implementation of {@link Dispatcher}.
  */
@@ -43,6 +46,7 @@ public class SimpleDispatcher implements Dispatcher {
 
     private final Map<String, CommandMapping> commands = new HashMap<String, CommandMapping>();
     private final Description description;
+    private CommandMapping defaultMapping;
 
     /**
      * Create a new instance.
@@ -69,19 +73,41 @@ public class SimpleDispatcher implements Dispatcher {
 
     @Override
     public void registerCommand(CommandCallable callable, String... alias) {
-        CommandMapping mapping = new ImmutableCommandMapping(callable, alias);
-        
-        // Check for replacements
-        for (String a : alias) {
-            String lower = a.toLowerCase();
-            if (commands.containsKey(lower)) {
-                throw new IllegalArgumentException(
-                        "Can't add the command '" + a + "' because SimpleDispatcher does not support replacing commands");
+        this.registerCommand(callable, null, alias);
+    }
+
+    @Override
+    public void registerDefaultCommand(CommandCallable callable, Default defaultDefinition, String... alias) {
+        this.registerCommand(callable, defaultDefinition, alias);
+    }
+
+    protected void registerCommand(CommandCallable callable, @Nullable Default defaultDefinition, String... aliases) {
+        CommandMapping mapping = new ImmutableCommandMapping(callable, aliases);
+
+        if (defaultDefinition != null) {
+            if (this.defaultMapping != null) {
+                throw new IllegalStateException("SimpleDispatcher does not support replacing the default command mapping");
+            }
+
+            this.defaultMapping = mapping;
+
+            // If this command is marked as "default only" we should skip registering the aliases.
+            if (defaultDefinition.defaultOnly()) {
+                return;
             }
         }
-        
-        for (String a : alias) {
-            String lower = a.toLowerCase();
+
+        // Check for replacements
+        for (String alias : aliases) {
+            String lower = alias.toLowerCase();
+            if (commands.containsKey(lower)) {
+                throw new IllegalArgumentException(
+                    "Can't add the command '" + alias + "' because SimpleDispatcher does not support replacing commands");
+            }
+        }
+
+        for (String alias : aliases) {
+            String lower = alias.toLowerCase();
             commands.put(lower, mapping);
         }
     }
@@ -149,6 +175,21 @@ public class SimpleDispatcher implements Dispatcher {
                 return true;
             }
 
+            if (this.defaultMapping != null) {
+                try {
+                    this.defaultMapping.getCallable().call(subArguments, namespace, subParents);
+                } catch (AuthorizationException e) {
+                    throw e;
+                } catch (CommandException e) {
+                    throw e;
+                } catch (InvocationCommandException e) {
+                    throw e;
+                } catch (Throwable t) {
+                    throw new InvocationCommandException(t);
+                }
+
+                return true;
+            }
         }
 
         throw new InvalidUsageException("Please choose a sub-command.", this, parentCommands, true);

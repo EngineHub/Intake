@@ -21,6 +21,7 @@ package com.sk89q.intake.dispatcher;
 
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.CommandMapping;
+import com.sk89q.intake.Default;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -38,6 +39,15 @@ public interface Dispatcher extends CommandCallable {
      * @param alias a list of aliases, where the first alias is the primary name
      */
     void registerCommand(CommandCallable callable, String... alias);
+
+    /**
+     * Register a command with this dispatcher, and mark it as default.
+     *
+     * @param callable the command executor
+     * @param defaultDefinition the default annotation
+     * @param alias a list of aliases, where the first alias is the primary name
+     */
+    void registerDefaultCommand(CommandCallable callable, Default defaultDefinition, String... alias);
     
     /**
      * Get a list of commands. Each command, regardless of how many aliases
