@@ -178,6 +178,9 @@ public abstract class AbstractParametricCallable implements CommandCallable {
         }
 
         try {
+            namespace.put(CommandArgs.class, commandArgs);
+            namespace.put(CommandContext.class, context);
+
             boolean invoke = true;
 
             // preProcess
@@ -203,8 +206,6 @@ public abstract class AbstractParametricCallable implements CommandCallable {
             if (!invoke) {
                 return true; // Abort early
             }
-
-            namespace.put(CommandArgs.class, commandArgs);
 
             // invoke
             try {
