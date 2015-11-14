@@ -27,6 +27,7 @@ import com.sk89q.intake.CommandException;
 import com.sk89q.intake.completion.CommandCompleter;
 import com.sk89q.intake.completion.NullCompleter;
 import com.sk89q.intake.dispatcher.Dispatcher;
+import com.sk89q.intake.Default;
 import com.sk89q.intake.parametric.handler.ExceptionConverter;
 import com.sk89q.intake.parametric.handler.InvokeHandler;
 import com.sk89q.intake.parametric.handler.InvokeListener;
@@ -144,7 +145,13 @@ public class ParametricBuilder {
             Command definition = method.getAnnotation(Command.class);
             if (definition != null) {
                 CommandCallable callable = build(object, method);
-                dispatcher.registerCommand(callable, definition.aliases());
+
+                Default defaultDefinition = method.getAnnotation(Default.class);
+                if (defaultDefinition != null) {
+                    dispatcher.registerDefaultCommand(callable, defaultDefinition, definition.aliases());
+                } else {
+                    dispatcher.registerCommand(callable, definition.aliases());
+                }
             }
         }
     }
