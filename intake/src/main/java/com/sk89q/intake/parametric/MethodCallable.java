@@ -24,6 +24,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Chars;
 import com.sk89q.intake.*;
 import com.sk89q.intake.argument.Namespace;
+import com.sk89q.intake.completion.CommandCompleter;
+import com.sk89q.intake.completion.CompleterCache;
+import com.sk89q.intake.completion.Completion;
 import com.sk89q.intake.parametric.handler.InvokeListener;
 
 import java.lang.annotation.Annotation;
@@ -46,13 +49,15 @@ final class MethodCallable extends AbstractParametricCallable {
     private final Method method;
     private final Description description;
     private final List<String> permissions;
+    private final CommandCompleter completer;
 
-    private MethodCallable(ParametricBuilder builder, ArgumentParser parser, Object object, Method method, Description description, List<String> permissions) {
+    private MethodCallable(ParametricBuilder builder, ArgumentParser parser, Object object, Method method, Description description, List<String> permissions, CommandCompleter completer) {
         super(builder, parser);
         this.object = object;
         this.method = method;
         this.description = description;
         this.permissions = permissions;
+        this.completer = completer;
     }
 
     @Override
@@ -68,6 +73,17 @@ final class MethodCallable extends AbstractParametricCallable {
                 throw new InvocationCommandException("Could not invoke method '" + method + "'", e);
             }
         }
+    }
+
+    @Override
+    public List<String> getSuggestions(String arguments, Namespace locals) throws CommandException {
+        // If a completer has been provided for this command we should use that, otherwise
+        // fallback to the builder's default completer.
+        if (this.completer != null) {
+            return this.completer.getSuggestions(arguments, locals);
+        }
+
+        return super.getSuggestions(arguments, locals);
     }
 
     @Override
@@ -129,9 +145,15 @@ final class MethodCallable extends AbstractParametricCallable {
             listener.updateDescription(commandAnnotations, parser, descBuilder);
         }
 
+        CommandCompleter completer = null;
+        Completion completion = method.getAnnotation(Completion.class);
+        if (completion != null) {
+            completer = CompleterCache.get(completion.value(), completion.useSharedInstance());
+        }
+
         Description description = descBuilder.build();
 
-        MethodCallable callable = new MethodCallable(builder, parser, object, method, description, permissions);
+        MethodCallable callable = new MethodCallable(builder, parser, object, method, description, permissions, completer);
         callable.setCommandAnnotations(ImmutableList.copyOf(method.getAnnotations()));
         callable.setIgnoreUnusedFlags(ignoreUnusedFlags);
         callable.setUnusedFlags(unusedFlags);
