@@ -19,19 +19,12 @@
 
 package com.sk89q.intake.fluent;
 
-import com.sk89q.intake.CommandCallable;
-import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.SimpleDispatcher;
-import com.sk89q.intake.parametric.ParametricBuilder;
 
 /**
  * A collection of commands.
  */
-public class DispatcherNode {
-
-    private final CommandGraph graph;
-    private final DispatcherNode parent;
-    private final SimpleDispatcher dispatcher;
+public class DispatcherNode extends AbstractDispatcherNode {
     
     /**
      * Create a new instance.
@@ -40,37 +33,15 @@ public class DispatcherNode {
      * @param parent the parent node, or null
      * @param dispatcher the dispatcher for this node
      */
-    DispatcherNode(CommandGraph graph, DispatcherNode parent, SimpleDispatcher dispatcher) {
-        this.graph = graph;
-        this.parent = parent;
-        this.dispatcher = dispatcher;
+    DispatcherNode(CommandGraph graph, AbstractDispatcherNode parent, SimpleDispatcher dispatcher) {
+        super(graph, parent, dispatcher);
     }
 
     /**
-     * Register a command with this dispatcher.
-     * 
-     * @param callable the executor
-     * @param alias the list of aliases, where the first alias is the primary one
-     */
-    public void register(CommandCallable callable, String... alias) {
-        dispatcher.registerCommand(callable, alias);
-    }
-
-    /**
-     * Build and register a command with this dispatcher using the 
-     * {@link ParametricBuilder} assigned on the root {@link CommandGraph}.
-     * 
-     * @param object the object provided to the {@link ParametricBuilder}
-     * @return this object
-     * @see ParametricBuilder#registerMethodsAsCommands(Dispatcher, Object)
+     * {@inheritDoc}
      */
     public DispatcherNode registerMethods(Object object) {
-        ParametricBuilder builder = graph.getBuilder();
-        if (builder == null) {
-            throw new RuntimeException("No ParametricBuilder set");
-        }
-        builder.registerMethodsAsCommands(getDispatcher(), object);
-        return this;
+        return (DispatcherNode) super.registerMethods(object);
     }
     
     /**
@@ -87,37 +58,12 @@ public class DispatcherNode {
         getDispatcher().registerCommand(command, alias);
         return new DispatcherNode(graph, this, command);
     }
-    
+
     /**
-     * Return the parent node.
-     * 
-     * @return the parent node
-     * @throws RuntimeException if there is no parent node.
+     * {@inheritDoc}
      */
     public DispatcherNode parent() {
-        if (parent != null) {
-            return parent;
-        }
-        
-        throw new RuntimeException("This node does not have a parent");
-    }
-    
-    /**
-     * Get the root command graph.
-     * 
-     * @return the root command graph
-     */
-    public CommandGraph graph() {
-        return graph;
-    }
-    
-    /**
-     * Get the underlying dispatcher of this object.
-     * 
-     * @return the dispatcher
-     */
-    public Dispatcher getDispatcher() {
-        return dispatcher;
+        return (DispatcherNode) super.parent();
     }
 
 }

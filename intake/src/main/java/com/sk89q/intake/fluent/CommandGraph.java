@@ -23,6 +23,8 @@ import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.dispatcher.SimpleDispatcher;
 import com.sk89q.intake.parametric.ParametricBuilder;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A fluent interface to creating a command graph.
  * 
@@ -33,6 +35,7 @@ public class CommandGraph {
 
     private final DispatcherNode rootDispatcher;
     private ParametricBuilder builder;
+    private GroupDispatcherNode groupDispatcher;
 
     /**
      * Create a new command graph.
@@ -49,6 +52,20 @@ public class CommandGraph {
      */
     public DispatcherNode commands() {
         return rootDispatcher;
+    }
+
+    /**
+     * Get the group dispatcher node.
+     *
+     * @return the group dispatcher node
+     */
+    public GroupDispatcherNode groupedCommands() {
+        checkNotNull(this.builder, "builder must be set to use grouped commands");
+        if (this.groupDispatcher == null) {
+            this.groupDispatcher = new GroupDispatcherNode(this, null, (SimpleDispatcher) this.rootDispatcher.getDispatcher(), this.builder);
+        }
+
+        return this.groupDispatcher;
     }
 
     /**
