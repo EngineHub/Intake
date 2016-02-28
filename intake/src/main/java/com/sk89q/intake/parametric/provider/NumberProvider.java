@@ -49,7 +49,7 @@ abstract class NumberProvider<T extends Number> implements Provider<T> {
      */
     @Nullable
     protected static Double parseNumericInput(@Nullable String input) throws ArgumentParseException {
-        if (input == null) {
+        if (input == null || input.equals("")) {
             return null;
         }
 
