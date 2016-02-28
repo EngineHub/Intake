@@ -249,7 +249,7 @@ public final class ArgumentParser {
                             throw new IllegalParameterException("Both @Optional and @Switch were found on the same element for parameter #" + index);
                         }
 
-                        optionType = type == boolean.class ? OptionType.flag(((Switch) annotation).value()) : OptionType.valueFlag(((Switch) annotation).value());
+                        optionType = (type == boolean.class || type == Boolean.class) ? OptionType.flag(((Switch) annotation).value()) : OptionType.valueFlag(((Switch) annotation).value());
 
                     } else if (annotation instanceof Optional) {
                         if (optionType != null) {
