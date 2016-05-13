@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.ArgumentParseException;
 import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.example.parametric.model.Body;
 import com.sk89q.intake.example.parametric.model.Universe;
 import com.sk89q.intake.parametric.Provider;
@@ -58,7 +59,7 @@ public class BodyProvider implements Provider<Body> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(String prefix, Namespace locals) {
         return ImmutableList.copyOf(universe.getPrefixedWith(prefix).keySet());
     }
 }

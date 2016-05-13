@@ -33,7 +33,7 @@ public interface CommandCompleter {
      * Get a list of suggestions based on input.
      *
      * @param arguments the arguments entered up to this point
-     * @param locals the locals
+     * @param locals The namespace to send to providers
      * @return a list of suggestions
      * @throws CommandException thrown if there was a parsing error
      */

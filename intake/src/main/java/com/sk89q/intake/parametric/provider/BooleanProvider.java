@@ -21,6 +21,7 @@ package com.sk89q.intake.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.parametric.Provider;
 
 import javax.annotation.Nullable;
@@ -44,7 +45,7 @@ class BooleanProvider implements Provider<Boolean> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(String prefix, Namespace locals) {
         return Collections.emptyList();
     }
 

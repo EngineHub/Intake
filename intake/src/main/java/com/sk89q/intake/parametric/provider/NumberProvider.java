@@ -20,6 +20,7 @@
 package com.sk89q.intake.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentParseException;
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.parametric.Provider;
 import com.sk89q.intake.parametric.annotation.Range;
 
@@ -36,7 +37,7 @@ abstract class NumberProvider<T extends Number> implements Provider<T> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(String prefix, Namespace locals) {
         return Collections.emptyList();
     }
 

@@ -274,7 +274,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(String arguments, Namespace locals) throws CommandException {
-        return builder.getDefaultCompleter().getSuggestions(arguments, locals);
+        return parser.parseSuggestions(arguments, locals);
     }
 
 }

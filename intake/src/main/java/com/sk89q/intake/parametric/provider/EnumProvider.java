@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.ArgumentParseException;
 import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.parametric.Provider;
 import com.sk89q.intake.parametric.ProvisionException;
 
@@ -78,7 +79,7 @@ public class EnumProvider<T extends Enum<T>> implements Provider<T> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(String prefix, Namespace locals) {
         List<String> suggestions = Lists.newArrayList();
         String test = simplify(prefix);
 

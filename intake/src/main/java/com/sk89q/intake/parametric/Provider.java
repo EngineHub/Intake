@@ -21,6 +21,7 @@ package com.sk89q.intake.parametric;
 
 import com.sk89q.intake.argument.ArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
+import com.sk89q.intake.argument.Namespace;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
@@ -61,8 +62,9 @@ public interface Provider<T> {
      * be returned.</p>
      *
      * @param prefix What the user has typed so far (may be an empty string)
+     * @param locals The namespace under which this command's suggestions are being provided
      * @return A list of suggestions
      */
-    List<String> getSuggestions(String prefix);
+    List<String> getSuggestions(String prefix, Namespace locals);
 
 }
