@@ -63,8 +63,9 @@ public interface Provider<T> {
      *
      * @param prefix What the user has typed so far (may be an empty string)
      * @param locals The namespace under which this command's suggestions are being provided
+     * @param modifiers The modifiers on the parameter
      * @return A list of suggestions
      */
-    List<String> getSuggestions(String prefix, Namespace locals);
+    List<String> getSuggestions(String prefix, Namespace locals, List<? extends Annotation> modifiers);
 
 }

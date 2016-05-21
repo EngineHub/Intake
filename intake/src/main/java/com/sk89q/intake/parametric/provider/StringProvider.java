@@ -49,7 +49,7 @@ class StringProvider implements Provider<String> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix, Namespace locals) {
+    public List<String> getSuggestions(String prefix, Namespace locals, List<? extends Annotation> modifiers) {
         return Collections.emptyList();
     }
 

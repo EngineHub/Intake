@@ -145,7 +145,7 @@ public final class ArgumentParser {
 
         ParameterEntry entry = parameters.get(parameter);
 
-        return entry.getBinding().getProvider().getSuggestions(arg, locals);
+        return entry.getBinding().getProvider().getSuggestions(arg, locals, entry.getModifiers());
     }
 
     private Object getDefaultValue(ParameterEntry entry, CommandArgs arguments) {
