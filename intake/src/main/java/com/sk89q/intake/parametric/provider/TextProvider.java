@@ -20,7 +20,6 @@
 package com.sk89q.intake.parametric.provider;
 
 import com.sk89q.intake.argument.ArgumentException;
-import com.sk89q.intake.argument.MissingArgumentException;
 import com.sk89q.intake.argument.CommandArgs;
 
 import javax.annotation.Nullable;
@@ -34,25 +33,13 @@ class TextProvider extends StringProvider {
     @Nullable
     @Override
     public String get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException {
-        StringBuilder builder = new StringBuilder();
-        boolean first = true;
-        while (true) {
-            if (!first) {
-                builder.append(" ");
-            }
-            try {
-                builder.append(arguments.next());
-            } catch (MissingArgumentException ignored) {
-                break;
-            }
-            first = false;
+        StringBuilder builder = new StringBuilder(arguments.next()); //throws an exception if there's no first arg
+        while (arguments.hasNext()) {
+            builder.append(" ").append(arguments.next());
         }
-        if (first) {
-            throw new MissingArgumentException();
-        }
-        String v = builder.toString();
-        validate(v, modifiers);
-        return v;
+        String text = builder.toString();
+        validate(text, modifiers);
+        return text;
     }
 
 }
