@@ -165,6 +165,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
         String[] split = CommandContext.split(calledCommand + " " + stringArguments);
         CommandContext context = new CommandContext(split, parser.getValueFlags(), false, namespace);
         final CommandArgs commandArgs = Arguments.viewOf(context);
+        namespace.put(CommandArgs.class, commandArgs);
         List<InvokeHandler> handlers = new ArrayList<InvokeHandler>();
 
         // Provide help if -? is specified
@@ -203,8 +204,6 @@ public abstract class AbstractParametricCallable implements CommandCallable {
             if (!invoke) {
                 return true; // Abort early
             }
-
-            namespace.put(CommandArgs.class, commandArgs);
 
             // invoke
             try {
