@@ -56,7 +56,7 @@ public class UserProvider implements Provider<User> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix) {
         return ImmutableList.of();
     }
 

@@ -58,7 +58,7 @@ public class BodyProvider implements Provider<Body> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix) {
         return ImmutableList.copyOf(universe.getPrefixedWith(prefix).keySet());
     }
 }

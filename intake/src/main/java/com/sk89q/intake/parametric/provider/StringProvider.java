@@ -48,7 +48,7 @@ class StringProvider implements Provider<String> {
     }
 
     @Override
-    public List<String> getSuggestions(String prefix) {
+    public List<String> getSuggestions(CommandArgs arguments, List<? extends Annotation> modifiers, String prefix) {
         return Collections.emptyList();
     }
 

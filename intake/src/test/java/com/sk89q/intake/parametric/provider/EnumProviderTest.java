@@ -49,13 +49,13 @@ public class EnumProviderTest {
 
     @Test
     public void testGetSuggestions() throws Exception {
-        assertThat(provider.getSuggestions(""), containsInAnyOrder("small", "medium", "large", "very_large"));
-        assertThat(provider.getSuggestions("s"), containsInAnyOrder("small"));
-        assertThat(provider.getSuggestions("la"), containsInAnyOrder("large"));
-        assertThat(provider.getSuggestions("very"), containsInAnyOrder("very_large"));
-        assertThat(provider.getSuggestions("verylarg"), containsInAnyOrder("very_large"));
-        assertThat(provider.getSuggestions("very_"), containsInAnyOrder("very_large"));
-        assertThat(provider.getSuggestions("tiny"), Matchers.<String>empty());
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), ""), containsInAnyOrder("small", "medium", "large", "very_large"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "s"), containsInAnyOrder("small"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "la"), containsInAnyOrder("large"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "very"), containsInAnyOrder("very_large"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "verylarg"), containsInAnyOrder("very_large"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "very_"), containsInAnyOrder("very_large"));
+        assertThat(provider.getSuggestions(Arguments.of(), ImmutableList.<Annotation>of(), "tiny"), Matchers.<String>empty());
     }
 
     enum Size {
