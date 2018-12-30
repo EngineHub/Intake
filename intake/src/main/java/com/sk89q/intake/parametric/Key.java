@@ -69,11 +69,28 @@ public final class Key<T> implements Comparable<Key<?>> {
             } else if (type == null && o.type != null) {
                 return 1;
             } else {
-                return 0;
+                //allow for different classifiers in the same bindings list
+                return classifier.getName().compareTo(o.classifier.getName());
             }
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Key)) return false;
+        Key<?> key = (Key<?>) o;
+        if (type != null ? !type.equals(key.type) : key.type != null) return false;
+        return classifier != null ? classifier.equals(key.classifier) : key.classifier == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (classifier != null ? classifier.hashCode() : 0);
+        return result;
     }
 
     @Override
