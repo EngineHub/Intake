@@ -196,4 +196,5 @@ We happily accept contributions, especially through pull requests on GitHub.
 ## Links
 
 * [Visit our website](http://www.enginehub.org/)
+* [Discord](https://discord.gg/wvneRVm)
 * [IRC channel](http://skq.me/irc/irc.esper.net/sk89q/) (#sk89q on irc.esper.net)
